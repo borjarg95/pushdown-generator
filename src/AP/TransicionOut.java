@@ -42,7 +42,7 @@ public class TransicionOut {
 	}
 
 	/**
-	 * Constructor vacío.
+	 * Constructor vacio.
 	 */
 	public TransicionOut() {
 	}
