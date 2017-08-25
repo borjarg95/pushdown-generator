@@ -1,0 +1,11 @@
+{a,b};{S,A,B};{p,q,r};p;S;
+f(p,b,S)=(p,BS)
+f(p,b,B)=(p,BB)
+f(p, ,S)=(p, )
+f(p,b,B)=(r, )
+f(p,a,B)=(q, )
+f(q,a,B)=(q, )
+f(q, ,S)=(q, )
+f(q,b,B)=(r, )
+f(r,b,B)=(r, )
+f(r, ,S)=(r, )

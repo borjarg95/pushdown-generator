@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="automataPila" class="AP.AutomataPila"/>
+	
+	<bean id="generador" class="main.GeneradorAutomataPila"/>
+	
+	<bean id="procesador" class="main.ProcesadorPalabras"></bean>
+	
+<!-- 	CONTROLLER -->
+	<bean id="automataController" class = "main.AutomataController" >
+	</bean>
+	
+</beans>
