@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>PUSHDOWN AUTOMATON GENERADOR</title>
+	<link rel="stylesheet" href="css/style.css" />
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+	<link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.4/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/3.3.4/css/bootstrap.min.css}" rel="stylesheet" media="screen" />
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css"/>
+	
+	<script src="https://code.jquery.com/jquery-2.2.2.js"></script>
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
+	<script src="js/App.js"></script>
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+</head>
+<body>
+	<!-- Imagen constante que permite suber al inicio de la página -->	
+	<a class='flotante' href='#' ><img src='img/flechaArriba.png' border="0"/></a>
+	<div class="row">
+		<div class="col-md-3">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3>DEFINICIÓN</h3>
+				</div>
+				<div class="panel-body">		
+					<pre><h5>Definición completa</h5></pre>
+					<div>
+						<textarea class="form-control" placeholder="Texto"  rows="11" name='texto' id='texto' style="resize:none">{a,b};{S,A,B};{p,q,r};p;S;
+f(p,b,S)=(p,BS)
+f(p,b,B)=(p,BB)
+f(p, ,S)=(p, )
+f(p,b,B)=(r, )
+f(p,a,B)=(q, )
+f(q,a,B)=(q, )
+f(q, ,S)=(q, )
+f(q,b,B)=(r, )
+f(r,b,B)=(r, )
+f(r, ,S)=(r, )</textarea>
+						<br>
+					</div>
+					<div class="btn-group">
+					</div>					
+					<input class="btn btn-success pull-right" type="submit" role="button" value="Generar" onclick="generarDefinicionLarga()" />					
+<!-- 					<pre id="imagenesSeleccionadas"><h5>Imágenes seleccionadas</h5></pre> -->
+<!-- 					se mostrará la lista de imagenes seleccionadas -->
+<!-- 					<div class="select-pictures" id="select-pictures"></div>					 -->
+				</div> <!-- Cierre div panel-body -->
+			</div><!-- Cierre div panel-default -->
+
+		</div><!-- Cierre div col-md-3 -->
+		<!-- zona central de la página -->
+		<div class="col-md-7">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+<!-- 				  <h2>Imágenes Flickr</h2> -->
+				</div>
+				<div class="panel-body text-center">
+				  <!-- Modal con la imagen, descripción y listas asociadas a la imagen ampliada-->
+				<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+					<div class="modal-dialog modal-lg" role="document">
+						<div class="modal-content">						
+							<div class="modal-header">
+								<!-- TÍTULO DE LA FOTO EN CASO DE QUE TENGA-->
+								<div id="titlePhoto"></div>
+								<!-- Botón superior derecho para cerrar el modal (misma funcionalidad que el boton de cierre inferior derecho)-->
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								<br>
+							</div>	
+							<div id="modal-body" class="modal-body">
+								<!-- DESCRIPCIÓN DE LA FOTO EN CASO DE QUE TENGA-->
+								<div class="row" id= "descripcionBody"></div>
+								<!-- En este contenedor se cargará la imagen ampliada -->
+								<div id="photo-body" class="modal-body"> </div>	
+								<!-- LISTAS A LAS QUE PERTENECE LA FOTO (PÚBLICAS, ÁLBUMES Y GALERIAS) -->
+								<div class= "container" id="listBody">								
+									<div class="row">
+										<div class="col-sm-3">
+											<h4>Álbumes</h4>
+											<ul id="setPhoto" class="contextPhoto">
+											</ul>
+										</div> <!--cierre primera columna-->
+										<div class="col-sm-3">
+											<h4>Grupos</h4>							
+											<ul id="poolPhoto" class="contextPhoto">
+											</ul>
+										</div>
+										<div class="col-sm-3">	
+											<h4>Galerías</h4>								
+											<ul id="galeriesPhoto" class="contextPhoto">
+											</ul>
+										</div>
+									</div>
+									<br>
+								</div>
+								<!-- Botones de insertar a lista temporal/ mostrar más fotos del mismo usuario -->
+								<div class= "container" id="selectBody">
+									<div class="row">
+										<div class="col-sm-1">
+											<input class="btn btn-success pull-left" id="botonAddSelect" type="submit" role="button" value="Seleccionar foto" onclick="aniadirASel()"/>
+										</div>
+										<div class="col-sm-3">
+											<input type="hidden" id="usuario" value="">
+											<input class="btn btn-success pull-center" id="botonFotosUsuario" type="submit" role="button" value="Ver más del usuario" onclick="mostrar_fotosUsuario()"/>	
+										</div>										
+									</div> <!-- cierre div botones -->
+								</div>
+							</div>
+							<!--pie del modal-->
+							<div class="modal-footer">
+								<!-- Botón inferior derecho para cerrar el modal (misma funcionalidad que el boton de cierre superior derecho)-->
+								<button type="button" id="cerrarImg" class="btn btn-default" data-dismiss="modal">Close</button>
+							</div>
+						</div> 
+					</div>
+				</div>
+				 <!-- Contenedor que muestra las imagenes buscadas de la pagina principal-->			  
+				<div id="imagenes"></div>
+			</div> <!--cierre div modal-->
+			</div>
+		</div>
+	</div> 
+</body>
+</html>

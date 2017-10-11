@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ImportResource;
 
 
 @SpringBootApplication
-@ImportResource("classpath:Beans-automata.xml")
+//@ImportResource("classpath:Beans-automata.xml")
 public class App extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {

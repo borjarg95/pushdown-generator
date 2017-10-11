@@ -15,13 +15,14 @@ import AP.AutomataPila;
 
 @RestController
 public class AutomataController {
+	
+	public AutomataController() {}
 
 	//TODO solucionar problemas con dependencias/beans apra evitar instanciar objetos
-	@Autowired
-	@Qualifier("generador")	
+//	@Autowired
 	GeneradorAutomataPila generador;
 	
-	@Autowired
+//	@Autowired
 	ProcesadorPalabras procesador;
 	
 	@RequestMapping(value= "/")

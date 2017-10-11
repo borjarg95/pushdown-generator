@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import main.GeneradorAutomataPila;
 
@@ -16,8 +17,8 @@ import main.GeneradorAutomataPila;
 
 public class AutomataPila {
 
-	@Autowired
-	private GeneradorAutomataPila generador;
+//	@Autowired
+	private GeneradorAutomataPila generador = new GeneradorAutomataPila();
 	//runable java --> interfaz para hilos en java, concurrencia. (fork)
 	/**
 	 * @param alfabetoLenguaje
