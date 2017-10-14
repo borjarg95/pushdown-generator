@@ -4,20 +4,32 @@ function generarDefinicionLarga() {
 	if (texto.length==0){
 		alert("¡Debes escribir una descripción!")
 	}
-//	var busqueda = 'https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=' 
-//		+ api_key +'&text=' + texto + '&format=json&nojsoncallback=1';
 	var busqueda = "/Generate"
 //		$.postJSON(busqueda, function(data){
 //				mostrar_fotos(data);
-//			});			
+//			});		
+		debugger;
 		$.ajax({
-			  type: "POST",
-			  url: busqueda,
-			  data: data,
-			  success: success,
-			  dataType: dataType
-			});
-}
+		    url : busqueda,
+		    type: "POST",
+		    data : texto,
+		    success: function(data, textStatus, jqXHR)
+		    {
+		    	debugger;
+		    	print(data);
+		    },
+		    error: function (jqXHR, textStatus, errorThrown)
+		    {
+		    	alert("Vaya mierda de creación");
+		    }
+		});
+}	
+		//request with URL,success callback
+//		$.post(busqueda,function(data)
+//		{
+//			debugger;
+//			print(data)
+//		});
 
 //Método que muestra cada imagen recuperada de la búsqueda
 function mostrar_fotos(info) { 
