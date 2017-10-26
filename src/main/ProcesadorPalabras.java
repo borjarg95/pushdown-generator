@@ -156,7 +156,7 @@ public class ProcesadorPalabras {
 
 			if (Utils.esFactible(transOut,pilaAux,palabraEntrada,posicionCadena)){
 				pila = pilaAux;
-				estadoActual = transOut.getEstado();
+				estadoActual = transOut.getEstadoSalida();
 
 				if (Utils.esSolucion(tranEntrada,tranLambda, pila, posicionCadena, palabraEntrada, estadoActual, automata)){
 					exito = true;

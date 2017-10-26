@@ -63,4 +63,51 @@ public class Utils<E> {
 	public E[] AdaptaAArray(List<E> list){
 		return (E[]) list.toArray();
 	}
+	
+	/**
+	 * El siguiente método corrige los posibles
+	 * carácteres erróneos que podemos encontrar 
+	 * en la transformación mediante json.
+	 * @param hexaString
+	 * @return
+	 */
+	public static String correctorCharEspeciales(String hexaString){
+		
+		String correccion = hexaString.replace('+', ' ');
+		
+		correccion = correccion.replace("\r", "");	
+		
+		if (hexaString.contains("%")){ /*ahorramos computo si no existe ningún %, 
+										ya que forma parte de las cadenas de caracteres especiales*/
+			correccion = correccion.replace("%C3%B1", "ñ"); 
+			correccion = correccion.replace("C3%91", "Ñ"); 
+			correccion = correccion.replace("%C3%A1", "á"); 
+			correccion = correccion.replace("%C3%81", "Á"); 
+			correccion = correccion.replace("%C3%A9", "é"); 
+			correccion = correccion.replace("%C3%89", "É");
+			correccion = correccion.replace("%C3%AD", "í"); 
+			correccion = correccion.replace("%C3%8D", "Í");		
+			correccion = correccion.replace("%C3%B3", "ó");
+			correccion = correccion.replace("%C3%93", "Ó"); 
+			correccion = correccion.replace("%C3%BA", "ú"); 
+			correccion = correccion.replace("%C3%9A", "Ú");
+			correccion = correccion.replace("%3A", ":");
+			correccion = correccion.replace("%2C", ",");
+			correccion = correccion.replace("3B", ";");
+			correccion = correccion.replace("3F", "?");
+			correccion = correccion.replace("%C2%BF", "¿");
+			correccion = correccion.replace("%C2%A1", "¡");	
+			correccion = correccion.replace("%7B", INICIO_CAMPO);
+			correccion = correccion.replace("%7D", FIN_CAMPO);
+			correccion = correccion.replace("%2C", SEPARADOR_ELEMENTOS_CAMPO);
+			correccion = correccion.replace("%3B", SEPARADOR_CAMPOS);
+			correccion = correccion.replace("%0A", SALTO_LINEA);
+			correccion = correccion.replace("%28", "(");
+			correccion = correccion.replace("%29", ")");	
+			correccion = correccion.replace("%3D", SEPARADOR_TRANSICIONES);
+
+			
+		}
+		return correccion;
+	}
 }

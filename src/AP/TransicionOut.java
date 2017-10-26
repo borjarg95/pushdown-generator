@@ -4,20 +4,20 @@ import java.util.List;
 
 public class TransicionOut {
 
-	private String estado;
+	private String estadoSalida;
 	private List<Character> nuevaCabezaPila;
 	
 	/**
-	 * @return the estado
+	 * @return the estadoSalida
 	 */
-	public String getEstado() {
-		return estado;
+	public String getEstadoSalida() {
+		return estadoSalida;
 	}
 	/**
-	 * @param estado the estado to set
+	 * @param estadoSalida the estadoSalida to set
 	 */
-	public void setEstado(String estado) {
-		this.estado = estado;
+	public void setEstadoSalida(String estado) {
+		this.estadoSalida = estado;
 	}
 	/**
 	 * @return the nuevaCabezaPila
@@ -32,12 +32,12 @@ public class TransicionOut {
 		this.nuevaCabezaPila = nuevaCabezaPila;
 	}
 	/**
-	 * @param estado
+	 * @param estadoSalida
 	 * @param nuevaCabezaPila
 	 */
 	public TransicionOut(String estado, List<Character> nuevaCabezaPila) {
 		super();
-		this.estado = estado;
+		this.estadoSalida = estado;
 		this.nuevaCabezaPila = nuevaCabezaPila;
 	}
 
@@ -51,7 +51,7 @@ public class TransicionOut {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((estado == null) ? 0 : estado.hashCode());
+		result = prime * result + ((estadoSalida == null) ? 0 : estadoSalida.hashCode());
 		result = prime * result + ((nuevaCabezaPila == null) ? 0 : nuevaCabezaPila.hashCode());
 		return result;
 	}
@@ -68,11 +68,11 @@ public class TransicionOut {
 			return false;
 		}
 		TransicionOut other = (TransicionOut) obj;
-		if (estado == null) {
-			if (other.estado != null) {
+		if (estadoSalida == null) {
+			if (other.estadoSalida != null) {
 				return false;
 			}
-		} else if (!estado.equals(other.estado)) {
+		} else if (!estadoSalida.equals(other.estadoSalida)) {
 			return false;
 		}
 		if (nuevaCabezaPila == null) {
@@ -87,7 +87,7 @@ public class TransicionOut {
 
 	@Override
 	public String toString() {
-		return "("+estado + ", " + nuevaCabezaPila +")";
+		return "("+estadoSalida + ", " + nuevaCabezaPila +")";
 	}
 	
 	

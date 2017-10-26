@@ -236,7 +236,7 @@ public class GeneradorAutomataPila {
 		if (!automata.getEstadosPila().contains(estadoDestino)){
 			throw new IOException("El estado "+estadoDestino+" de la linea "+line+" no pertenece a los estados del aut�mata");		
 		} else {
-			tranSalida.setEstado(estadoDestino);
+			tranSalida.setEstadoSalida(estadoDestino);
 		}
 		String nuevaCabezaPila = vectorTransSalida[1];
 		List<Character> cabezaPila = new ArrayList<>();
