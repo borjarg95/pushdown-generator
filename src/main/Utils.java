@@ -93,8 +93,8 @@ public class Utils<E> {
 			correccion = correccion.replace("%C3%9A", "Ú");
 			correccion = correccion.replace("%3A", ":");
 			correccion = correccion.replace("%2C", ",");
-			correccion = correccion.replace("3B", ";");
-			correccion = correccion.replace("3F", "?");
+			correccion = correccion.replace("%3B", ";");
+			correccion = correccion.replace("%3F", "?");
 			correccion = correccion.replace("%C2%BF", "¿");
 			correccion = correccion.replace("%C2%A1", "¡");	
 			correccion = correccion.replace("%7B", INICIO_CAMPO);

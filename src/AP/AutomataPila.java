@@ -8,9 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-
 import main.GeneradorAutomataPila;
 
 
@@ -39,7 +36,7 @@ public class AutomataPila {
 	private List<String> estadosFinales; //Inicialmente es automata 
 										//por vaciado, asi que este campo no importa de momento.
 	private List<TransicionIn> transicionesVaciado;
-	
+	private int idAutomata;
 	/**
 	 * Genera un nuevo autómata a pila dando valores a la séptupla que lo forma, siendo
 	 *  AP=(∑, Г, Q, A0, q0, f, F) 
@@ -231,6 +228,14 @@ public class AutomataPila {
 		return "AutomataPila [alfabetoLenguaje=" + alfabetoLenguaje + ", alfabetoPila=" + alfabetoPila
 				+ ", estadosPila=" + estadosPila + ", inicialPila=" + inicialPila + ", estadoInicial=" + estadoInicial
 				+ ", funcionesTransicion=" + funcionesTransicion + ", estadosFinales=" + estadosFinales + "]";
+	}
+
+	public int getIdAutomata() {
+		return idAutomata;
+	}
+
+	public void setIdAutomata(int idAutomata) {
+		this.idAutomata = idAutomata;
 	}
 	
 }

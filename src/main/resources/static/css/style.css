@@ -41,6 +41,10 @@ img.icon-img:hover {
 pre, h3, h2{
   text-align: center;
 }
+pre.descripciones{ 
+	text-align: left;
+/* 	margin-right: 60% !important; */
+}
 
 #imagenesSeleccionadas {
 	margin-top: 0.75cm !important;
@@ -51,4 +55,12 @@ pre, h3, h2{
         position:fixed;
         bottom: 0px;
         right:0px;
+}
+
+span{
+	font-size: 14px !important;
+}
+
+#transiciones{
+	margin-left: 15% !important;
 }
