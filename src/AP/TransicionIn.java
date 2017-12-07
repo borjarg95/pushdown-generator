@@ -12,56 +12,38 @@ public class TransicionIn {
 	 * @param simbCabezaPila
 	 */
 	public TransicionIn(String estado, char simbEntrada, char simbCabezaPila) {
-		super();
 		this.estado = estado;
 		this.simbEntrada = simbEntrada;
 		this.simbCabezaPila = simbCabezaPila;
 	}
+	
 	public TransicionIn() {
-		// TODO Auto-generated constructor stub
 	}
-	/**
-	 * @return the estado
-	 */
+
 	public String getEstado() {
 		return estado;
 	}
-	/**
-	 * @param estado the estado to set
-	 */
+
 	public void setEstado(String estado) {
 		this.estado = estado;
 	}
-	/**
-	 * @return the simbEntrada
-	 */
+
 	public char getSimbEntrada() {
 		return simbEntrada;
 	}
-	/**
-	 * @param simbEntrada the simbEntrada to set
-	 */
+
 	public void setSimbEntrada(char simbEntrada) {
 		this.simbEntrada = simbEntrada;
 	}
-	/**
-	 * @return the simbCabezaPila
-	 */
+	
 	public char getSimbCabezaPila() {
 		return simbCabezaPila;
 	}
-	/**
-	 * @param simbCabezaPila the simbCabezaPila to set
-	 */
+
 	public void setSimbCabezaPila(char simbCabezaPila) {
 		this.simbCabezaPila = simbCabezaPila;
 	}
 	
-	
-	@Override
-	public String toString() {
-		return "("+ estado + ","+simbEntrada+","+simbCabezaPila+")";
-	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -93,5 +75,8 @@ public class TransicionIn {
 		return true;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return "("+ estado + ","+simbEntrada+","+simbCabezaPila+")";
+	}
 }

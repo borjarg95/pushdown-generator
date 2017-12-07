@@ -5,10 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import org.springframework.stereotype.Service;
+
 import AP.AutomataPila;
 import AP.TransicionIn;
 import AP.TransicionOut;
+import excepciones.AlfabetoNoValidoException;
 
+@Service
 public class ProcesadorPalabras {
 
 	public ProcesadorPalabras(){}
@@ -34,8 +38,8 @@ public class ProcesadorPalabras {
 	}
 	
 	/**
-	 * M�todo que permite verificar si una palabra pertenece al lenguaje del aut�mata
-	 * @param palabraEntrada
+	 * M�todo que permite verificar si una palabra pertenece al lenguaje del aut�mata.
+	 * @param palabraEntrada no puede ser null, se valida desde el front.
 	 * @param automata
 	 * @return
 	 * @throws Exception
@@ -43,33 +47,36 @@ public class ProcesadorPalabras {
 	public boolean compruebaPalabraBT(String palabraEntrada, AutomataPila automata) throws Exception{
 		boolean pertenece = true; 
 		int i = 0;
+		char letraRechazada = 0;
 		palabraEntrada = palabraEntrada.trim(); //suprimimos los espacios en blanco en caso de que los haya
+		
 		//1� Comprobamos que los caracteres de entrada pertenecen al alfabeto
 		while (pertenece && (i<palabraEntrada.length())){
 			pertenece = automata.getAlfabetoLenguaje().contains(palabraEntrada.charAt(i));
 			if (!pertenece){
+				letraRechazada = palabraEntrada.charAt(i);
 				break;
 			}
 			i++;
 		}
 		
 		if (i!=palabraEntrada.length() || (i==palabraEntrada.length() && !pertenece)){
-			throw new Exception("Alguno de los caracteres no pertenece al alfabeto");
+			throw new AlfabetoNoValidoException("El caracter: "+letraRechazada+ " no pertenece al alfabeto");
 		}
 		
-		//2� Cargamos la primera transicion para llamar a nuestro metodo recursivo de BT
-			Stack<Character> pila = new Stack<>();
-			pila.push(automata.getInicialPila());
-			String estadoActual = automata.getEstadoInicial();			
-			//posicion inicial = 0
-			boolean resultado = compruebaBT(estadoActual, 0, palabraEntrada, pila,automata);
-			String palabra = palabraEntrada.isEmpty() ? "vacia" : palabraEntrada;
-			if (resultado){
-				System.out.println("La palabra: "+palabra+" esta aceptada por el automata.");
-			} else {
-				System.out.println("La palabra: "+palabra+" NO esta aceptada por el automata.");
-			}
-			return resultado;
+		//2� Cargamos la primera transicion para llamar al metodo recursivo de BT
+		Stack<Character> pila = new Stack<>();
+		pila.push(automata.getInicialPila());
+		String estadoActual = automata.getEstadoInicial();			
+		//posicion inicial = 0
+		boolean resultado = compruebaBT(estadoActual, 0, palabraEntrada, pila,automata);
+		String palabra = palabraEntrada.isEmpty() ? "vacia" : palabraEntrada;
+		if (resultado){
+			System.out.println("La palabra: "+palabra+" esta aceptada por el automata.");
+		} else {
+			System.out.println("La palabra: "+palabra+" NO esta aceptada por el automata.");
+		}
+		return resultado;
 	}
 	
 	/**
@@ -114,18 +121,18 @@ public class ProcesadorPalabras {
 		List<TransicionOut> transicionesSalida = null;
 		
 		if (automata.getFuncionesTransicion().get(tranEntrada) !=null){
-			transicionesSalida = new ArrayList<TransicionOut>(automata.getFuncionesTransicion().get(tranEntrada));
+			transicionesSalida = new ArrayList<>(automata.getFuncionesTransicion().get(tranEntrada));
 		} 
 		
 		if (transicionesSalida == null || transicionesSalida.isEmpty()){
 			pila.push(tranEntrada.getSimbCabezaPila());		
 			tranEntrada = new TransicionIn(estadoActual, Utils.LAMBDA, pila.pop());
 			if (automata.getFuncionesTransicion().get(tranEntrada) != null)
-				transicionesSalida = new ArrayList<TransicionOut>(automata.getFuncionesTransicion().get(tranEntrada));			
+				transicionesSalida = new ArrayList<>(automata.getFuncionesTransicion().get(tranEntrada));			
 		} else {
 			tranLambda = new TransicionIn(estadoActual, Utils.LAMBDA, tranEntrada.getSimbCabezaPila());
 			if (automata.getFuncionesTransicion().get(tranLambda) != null){
-				List<TransicionOut> transSalidaLambda = new ArrayList<TransicionOut>(automata.getFuncionesTransicion().get(tranLambda));
+				List<TransicionOut> transSalidaLambda = new ArrayList<>(automata.getFuncionesTransicion().get(tranLambda));
 				for (TransicionOut transicion :transSalidaLambda){
 					if (!transicionesSalida.contains(transicion))
 						transicionesSalida.add(transicion);

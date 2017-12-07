@@ -8,15 +8,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import excepciones.AlfabetoNoValidoException;
 import main.GeneradorAutomataPila;
-
 
 
 public class AutomataPila {
 
-//	@Autowired
-	private GeneradorAutomataPila generador = new GeneradorAutomataPila();
-	//runable java --> interfaz para hilos en java, concurrencia. (fork)
+	private GeneradorAutomataPila generadorAutomataPila;
 	/**
 	 * @param alfabetoLenguaje
 	 * @param alfabetoPila
@@ -60,16 +58,9 @@ public class AutomataPila {
 		this.estadosFinales = finales;
 	}
 	
-	public AutomataPila(String ruta) throws FileNotFoundException, IOException{
-		AutomataPila automata = generador.generaAutomataRuta(ruta);
-		
-		this.alfabetoLenguaje = automata.getAlfabetoLenguaje();
-		this.alfabetoPila =  automata.getAlfabetoPila();
-		this.estadosPila = automata.getEstadosPila();
-		this.inicialPila = automata.getInicialPila();
-		this.estadoInicial = automata.getEstadoInicial();
-		this.funcionesTransicion = automata.getFuncionesTransicion();
-		this.estadosFinales = automata.getEstadosFinales();
+	public AutomataPila generaAutomataConRuta(String ruta) throws FileNotFoundException, IOException, AlfabetoNoValidoException{
+		generadorAutomataPila = new GeneradorAutomataPila();
+		return generadorAutomataPila.generaAutomataRuta(ruta);
 	}
 	
 	/**
@@ -77,15 +68,25 @@ public class AutomataPila {
 	 * @param definicion
 	 * @return
 	 * @throws IOException
+	 * @throws AlfabetoNoValidoException 
 	 */
-	public AutomataPila generaAutomata(String definicion) throws IOException{
+	public AutomataPila(String definicion) throws IOException, AlfabetoNoValidoException{
+		generadorAutomataPila = new GeneradorAutomataPila();
+		AutomataPila automata = generadorAutomataPila.generaAutomata(definicion);
+		this.alfabetoLenguaje = automata.getAlfabetoLenguaje();
+		this.alfabetoPila =  automata.getAlfabetoPila();
+		this.estadosPila = automata.getEstadosPila();
+		this.inicialPila = automata.getInicialPila();
+		this.estadoInicial = automata.getEstadoInicial();
+		this.funcionesTransicion = automata.getFuncionesTransicion();
+		this.estadosFinales = automata.getEstadosFinales();
 		
-		return generador.generaAutomata(definicion);
 	}
 	
 	public AutomataPila(String primeraLinea, List<String> transiciones) throws IOException{
-//		return generador.generaAutomata(primeraLinea, transiciones);
+//		return generadorAutomataPila.generaAutomata(primeraLinea, transiciones);
 	}
+	
 	/**
 	 * Constructor generico
 	 */
@@ -159,6 +160,7 @@ public class AutomataPila {
 		this.transicionesVaciado = transicionesVaciado;
 	}
 	
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -169,7 +171,9 @@ public class AutomataPila {
 		result = prime * result + ((estadosFinales == null) ? 0 : estadosFinales.hashCode());
 		result = prime * result + ((estadosPila == null) ? 0 : estadosPila.hashCode());
 		result = prime * result + ((funcionesTransicion == null) ? 0 : funcionesTransicion.hashCode());
+		result = prime * result + idAutomata;
 		result = prime * result + ((inicialPila == null) ? 0 : inicialPila.hashCode());
+		result = prime * result + ((transicionesVaciado == null) ? 0 : transicionesVaciado.hashCode());
 		return result;
 	}
 
@@ -179,7 +183,7 @@ public class AutomataPila {
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof AutomataPila))
+		if (getClass() != obj.getClass())
 			return false;
 		AutomataPila other = (AutomataPila) obj;
 		if (alfabetoLenguaje == null) {
@@ -212,17 +216,21 @@ public class AutomataPila {
 				return false;
 		} else if (!funcionesTransicion.equals(other.funcionesTransicion))
 			return false;
+		if (idAutomata != other.idAutomata)
+			return false;
 		if (inicialPila == null) {
 			if (other.inicialPila != null)
 				return false;
 		} else if (!inicialPila.equals(other.inicialPila))
 			return false;
+		if (transicionesVaciado == null) {
+			if (other.transicionesVaciado != null)
+				return false;
+		} else if (!transicionesVaciado.equals(other.transicionesVaciado))
+			return false;
 		return true;
 	}
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
+
 	@Override
 	public String toString() {
 		return "AutomataPila [alfabetoLenguaje=" + alfabetoLenguaje + ", alfabetoPila=" + alfabetoPila

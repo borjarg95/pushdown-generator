@@ -1,5 +1,7 @@
 package GramaticaIC;
 
+import org.apache.commons.validator.GenericValidator;
+
 import main.Utils;
 
 /**
@@ -27,8 +29,8 @@ public class PlantillaProduccion{
 	 * @throws Exception 
 	 */
 	PlantillaProduccion(String estado1, Character simboloPila, String estado2) throws Exception{
-		if (!Utils.isBlankOrNull(estado1)){
-			if (!Utils.isBlankOrNull(estado2)){ //Correctamente formado y no generativo/Axioma
+		if (!GenericValidator.isBlankOrNull(estado1)){
+			if (!GenericValidator.isBlankOrNull(estado2)){ //Correctamente formado y no generativo/Axioma
 				this.estado1 = estado1;
 				this.simbolo = simboloPila;
 				this.estado2 = estado2;
@@ -36,7 +38,7 @@ public class PlantillaProduccion{
 				throw new Exception("La producción ["+estado1+simboloPila+estado2+"], no está bien informada");
 			}
 		} else {
-			if (Utils.isBlankOrNull(estado2)){ //Axioma o producción(símbolo terminal)
+			if (GenericValidator.isBlankOrNull(estado2)){ //Axioma o producción(símbolo terminal)
 				this.estado1 = Character.toString(Utils.LAMBDA);
 				this.simbolo = simboloPila;
 				this.estado2 = Character.toString(Utils.LAMBDA);

@@ -18,20 +18,7 @@ public class Utils<E> {
 	public static final String SEPARADOR_TRANSICIONES = "=";
 	public static final Character LAMBDA = '@';
 	public static final String SALTO_LINEA = "\n";
-	/**
-	 * Permite comprobar si un string es nulo o est� formado por espacios en blanco
-	 * @param palabra
-	 * @return true en caso de que se cumpla alguna de las condiciones
-	 */
-	public static boolean isBlankOrNull(String palabra){
-		if (palabra == null){
-			return true;
-		} else if (palabra.trim().compareTo("") == 0){
-			return true;
-		}else
-			return false;		
-	}	
-	
+
 	public static boolean esSolucion(TransicionIn keyTransicion,TransicionIn tranLambda, Stack<Character> pila, int posPalabra, String palabraEntrada, String estadoActual, AutomataPila automata){
 
 		return (pila.isEmpty() && posPalabra == palabraEntrada.length());
@@ -52,7 +39,7 @@ public class Utils<E> {
 	 * @param array
 	 * @return
 	 */
-	public List<E> AdaptaALista(E array[]){
+	public List<E> adaptaALista(E array[]){
 		return Arrays.asList(array);
 	}
 	/**
@@ -60,7 +47,7 @@ public class Utils<E> {
 	 * @param list
 	 * @return
 	 */
-	public E[] AdaptaAArray(List<E> list){
+	public E[] adaptaAArray(List<E> list){
 		return (E[]) list.toArray();
 	}
 	

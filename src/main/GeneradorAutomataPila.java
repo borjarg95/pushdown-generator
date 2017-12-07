@@ -6,14 +6,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.validator.GenericValidator;
+
 import AP.AutomataPila;
 import AP.TransicionIn;
 import AP.TransicionOut;
+import excepciones.AlfabetoNoValidoException;
+import excepciones.CodigosError;
 
 /**
  * @author Borjarg95
  *
  */
+
 public class GeneradorAutomataPila {
 	
 	private BufferedReader b;
@@ -28,8 +33,9 @@ public class GeneradorAutomataPila {
 	 * 			-Estado inicial
 	 * 			-S�mbolo inicial de pila
 	 *	Todos ellos, se encuentran separados mediante ";" de este modo se simplifica su procesado.
+	 * @throws AlfabetoNoValidoException 
 	 **/
-	public AutomataPila generaAutomataRuta(String ruta) throws FileNotFoundException, IOException{
+	public AutomataPila generaAutomataRuta(String ruta) throws FileNotFoundException, IOException, AlfabetoNoValidoException{
 		if ((ruta == null) || ruta.isEmpty()){
 			throw new FileNotFoundException("La ruta no está informada");
 		}
@@ -95,8 +101,8 @@ public class GeneradorAutomataPila {
 		return automata;
 	}
 	
-	public AutomataPila generaAutomata(String definicion) throws IOException{
-		if (Utils.isBlankOrNull(definicion)){
+	public AutomataPila generaAutomata(String definicion) throws IOException, AlfabetoNoValidoException{
+		if (GenericValidator.isBlankOrNull(definicion)){
 			throw new IOException("Error en la creacion del automata");
 		}
 		String[] entrada =  definicion.split("\n");
@@ -168,7 +174,7 @@ public class GeneradorAutomataPila {
 	 */
 	public AutomataPila generaAutomata(String defPrincipal, ArrayList<String> transiciones) throws IOException {
 		
-//		if (Utils.isBlankOrNull(defPrincipal)){
+//		if (GenericValidator.isBlankOrNull(defPrincipal)){
 //			throw new IOException("Error en la creacion del automata");
 //		}
 //		String[] primeraLinea = defPrincipal.split(Utils.SEPARADOR_CAMPOS);
@@ -188,8 +194,9 @@ public class GeneradorAutomataPila {
 	 * @param line
 	 * @return
 	 * @throws IOException
+	 * @throws AlfabetoNoValidoException 
 	 */	
-	private TransicionIn generaTransicionEntrada(String[] vectorTransEntrada, AutomataPila automata, int line) throws IOException {
+	private TransicionIn generaTransicionEntrada(String[] vectorTransEntrada, AutomataPila automata, int line) throws IOException, AlfabetoNoValidoException {
 		TransicionIn tranEntrada = new TransicionIn();
 		if (!automata.getEstadosPila().contains(vectorTransEntrada[0])){
 			throw new IOException("El estado "+vectorTransEntrada[0]+" de la linea "+line+" no pertenece a los estados del aut�mata");
@@ -206,7 +213,7 @@ public class GeneradorAutomataPila {
 				if (automata.getAlfabetoLenguaje().contains(simEntradaAlfabeto.charAt(0))){
 					tranEntrada.setSimbEntrada(simEntradaAlfabeto.charAt(0));
 				} else {
-					throw new IOException("El simbolo de entrada no pertenece al alfabeto del lenguaje");
+					throw new AlfabetoNoValidoException("El simbolo de entrada no pertenece al alfabeto del lenguaje");
 				}
 			}
 		} else {
@@ -259,8 +266,9 @@ public class GeneradorAutomataPila {
 	 * 			-Conjunto de estados
 	 * 			-Estado inicial
 	 * 			-Simbolo inicial de pila
+	 * @throws AlfabetoNoValidoException 
   	*/
-	public void procesaPrimeraLinea(AutomataPila automata, String[] primeraLinea) throws IOException{
+	private void procesaPrimeraLinea(AutomataPila automata, String[] primeraLinea) throws IOException, AlfabetoNoValidoException{
 		
 		if (primeraLinea.length!=Utils.ARGUMENTOS_LINEA0){
 			throw new IOException("La primera linea no está bien formada. Consulta la guia de mensajes de entrada");
@@ -273,7 +281,7 @@ public class GeneradorAutomataPila {
 		
 		
 		if (alfabetoLenguaje.length()<=2){
-			throw new IOException("El campo alfabetoLenguaje no está informado");
+			throw new AlfabetoNoValidoException(CodigosError.ALFABETO_LENGUAJE.getValue());
 		}
 
 		if (simbAutomata.length()<=2){
@@ -311,14 +319,14 @@ public class GeneradorAutomataPila {
 		estados = estados.substring(1, estados.length()-1); //suprimimos los corchetes
 		String vectorEstados[] = estados.split(Utils.SEPARADOR_ELEMENTOS_CAMPO);
 		for (String a : vectorEstados){
-			if (Utils.isBlankOrNull(a)){
+			if (GenericValidator.isBlankOrNull(a)){
 				throw new IOException("Alguno de los estados introducios est� vacio. "
 						+ "Deben informarse correctamente");
 			}
 			automata.getEstadosPila().add(a.trim()); //eliminamos los posibles blancos introducidos
 		}
 		//4�
-		if (Utils.isBlankOrNull(simbInicial)){
+		if (GenericValidator.isBlankOrNull(simbInicial)){
 			throw new IOException("Simbolo inicial de pila no informado");
 		} else if (simbInicial.length()!=1){
 			throw new IOException("Los simbolos de pila no pueden ser cadenas de caracteres, "
@@ -327,7 +335,7 @@ public class GeneradorAutomataPila {
 			automata.setInicialPila(simbInicial.charAt(0));
 		}	
 		//5�		
-		if (Utils.isBlankOrNull(estadoIni)){
+		if (GenericValidator.isBlankOrNull(estadoIni)){
 			throw new IOException("Estado inicial no informado");
 		} else if (!estados.contains(estadoIni)){
 			throw new IOException("El estado inicial debe pertenecer al conjunto de estados");

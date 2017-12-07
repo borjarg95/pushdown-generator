@@ -1,8 +1,12 @@
-//Metodo que recupera las imagenes buscadas y las muestra
+/**
+ * Metodo que procesa la entrada y genera un nuevo automata
+ * 
+ */
 function generarDefinicionLarga() {
 	var texto= $("#texto").val();
 	if (texto.length==0){
 		alert("¡Debes escribir una descripción!")
+		return 0;
 	}
 	var busqueda = "/Generate"
 		$.ajax({
@@ -19,16 +23,12 @@ function generarDefinicionLarga() {
 		    }
 		});
 }	
-
+/**
+ * 
+ * 
+ */
 function procesarAutomataResultante(automata){
-	//Vaciamos los resultados anteriores por si generamos un nuevo automata
-	$("#infoAutomata").removeClass('hidden');
-	$("#alfabetoLenguaje").empty();
-	$("#alfabetoPila").empty();
-	$("#estadosPila").empty();
-	$("#estadoInicial").empty();
-	$("#simbInicialPila").empty();
-	$("#transiciones").empty();
+	vaciarAutomata();
 	$("#identificador").val(automata.idAutomata.toString());
 	//Generamos las estructuras de los datos a mostrar
 	$("#alfabetoLenguaje").append(automata.alfabetoLenguaje.join(', '));
@@ -61,17 +61,54 @@ function compruebaPalabra(){
 	if (palabra.length==0){
 		alert("¡Debes escribir una palabra!");
 		return;
+	} else if(palabra.charAt(0) == " "){ //si empieza por blanco es la palabra vacía
+		palabra = "+";
 	}
 	var idAutomata = $("#identificador").val();
 	debugger;
 	var ruta = "/CheckWord/" + idAutomata + "/" + palabra;
-		$.getJSON(ruta, function(data){
-			debugger;
-			alert(data);
-			procesa_respuesta(data);
-		});	
+		$.ajax({
+		    url: ruta,
+		    type: 'GET',
+		    success: function(data){
+		    	debugger;
+		    	procesa_respuesta(data, palabra);
+		    },
+		    error: function(data) {
+		    	debugger;
+		    	procesa_respuesta(false, palabra);
+		        alert(data.responseText);
+		    }
+		});
+		
+		
 }
 
-function procesa_respuesta(data){
-	
+//Añade a la lista si la palabra está aceptada o no
+
+function procesa_respuesta(data, palabra){
+	debugger;
+	if (palabra=="+") palabra = "vacia"
+	if (data){
+		$("#resultados").append("<li>La palabra <b>"+ palabra + "</b> está aceptada.");
+	} else {
+		$("#resultados").append("<li>La palabra <b>"+ palabra + "</b> no está aceptada.");
+
+	}
+}
+
+/**
+ * Esta función permite vaciar la informacion mostrada del automata generado anteriormente
+ * para evitar apilar información innecesaria
+ */
+function vaciarAutomata(){
+	//Vaciamos los resultados anteriores por si generamos un nuevo automata
+	$("#infoAutomata").removeClass('hidden');
+	$("#alfabetoLenguaje").empty();
+	$("#alfabetoPila").empty();
+	$("#estadosPila").empty();
+	$("#estadoInicial").empty();
+	$("#simbInicialPila").empty();
+	$("#transiciones").empty();
+	$("#resultados").empty();
 }

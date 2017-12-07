@@ -9,7 +9,7 @@
 	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css"/>
 	
 	<script src="https://code.jquery.com/jquery-2.2.2.js"></script>
-	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<!-- 	<script src="http://code.jquery.com/jquery-1.9.1.js"></script> -->
 	<script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
 	<script src="js/App.js"></script>
 	<!-- Latest compiled and minified JavaScript -->
@@ -27,17 +27,7 @@
 				<div class="panel-body">		
 					<pre><h5>Escribe la<br>definición completa</h5></pre>
 					<div>
-						<textarea class="form-control" placeholder="Texto"  rows="11" name='texto' id='texto' style="resize:none">{a,b};{S,A,B};{p,q,r};p;S;
-f(p,b,S)=(p,BS)
-f(p,b,B)=(p,BB)
-f(p, ,S)=(p, )
-f(p,b,B)=(r, )
-f(p,a,B)=(q, )
-f(q,a,B)=(q, )
-f(q, ,S)=(q, )
-f(q,b,B)=(r, )
-f(r,b,B)=(r, )
-f(r, ,S)=(r, )</textarea>
+						<textarea class="form-control" placeholder="Texto"  rows="11" name='texto' id='texto' style="resize:none"></textarea>
 						<br>
 					</div>
 					<div class="btn-group">
@@ -59,32 +49,97 @@ f(r, ,S)=(r, )</textarea>
 				<div class="panel-body text-left">
 					<div id="infoAutomata" class="hidden">
 						<div class="row">						
-							<div class="col-md-6">
-								<div id="idAutomata" style="visibility: hidden">
-									<input class="form-control col-xs-3" type='value' id='identificador' value=""/>
-								</div>
+							<div class="col-md-6"><!-- Información de automata -->
 								<pre class="descripciones">Alfabeto del lenguaje: <span class="label label-default" id = "alfabetoLenguaje"></span></pre>
 								<pre class="descripciones">Alfabeto de la pila:   <span class="label label-default" id = "alfabetoPila"></span></pre>
 								<pre class="descripciones">Estados de la pila:    <span class="label label-default" id = "estadosPila"></span></pre>
 								<pre class="descripciones">Estado inicial pila:   <span class="label label-default" id = "estadoInicial"></span></pre>
 								<pre class="descripciones">Simbolo inicial pila:  <span class="label label-default" id = "simbInicialPila"></span></pre>
 								<pre class="descripciones">Transiciones:<br>	<div id="transiciones"></div></pre>
-							</div>					
-							<div class="col-md-6">
+								<div id="idAutomata" style="visibility: hidden">
+									<input class="form-control col-xs-3" type='value' id='identificador' value=""/>
+								</div>
+							</div>	<!-- Cierre información automata -->				
+							<div class="col-md-6"> <!-- Validaciones de palabras -->
 								<div class="form-group row">
 	     							<div class="col-xs-8">					
 										<input class="form-control col-xs-3" placeholder="Palabra" type='text' name='palabra' id='palabra'/>
+										<div id="divResultados">
+											<lu id="resultados"></lu>
+										</div>
 									</div>
 									<div class="col-xs-3">
 										<input class="btn btn-success pull-right" type="submit" role="button" value="Validar" onclick="compruebaPalabra()" />					
 									</div>								
 								</div>
-							</div>
+							</div> <!--  Cierre validaciones de palabras -->
 						</div>
-					</div><!-- Contenedor que contiene la informacion del automata generado-->								 			  
+					</div><!-- cierre Contenedor que contiene la informacion del automata generado-->								 			  
 				</div> <!--cierre div central-->
 			</div>
 		</div>
+		<!-- Columna de modales de información auxiliar -->
+		<div class="col-rd-3"> 
+			<button type="button" class="btn btn-info" data-toggle="modal" data-target="#infoUtil">Ayuda</button><br><br>
+			<button type="button" class="btn btn-success" data-toggle="modal" data-target="#ejemploAutomata">Ejemplo de<br>definición <br> de automata</button>
+			
+			<!-- Modal consejos de uso-->
+			<div id="infoUtil" class="modal fade modal -sm" role="dialog">
+			  <div class="modal-dialog">
+			
+			    <!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+				        <button type="button" class="close" data-dismiss="modal">&times;</button>
+				        <h4 class="modal-title">Formato de las definiciones de entrada para generar automatas</h4>
+				</div>
+				<div class="modal-body"> <!-- añadir color rojo al ejempl resultante -->
+					<p>En la primera linea se definiran separados por el simbolo <b>;</b> :<lu> 
+						<li>Alfabeto lenguaje: <b>{a,b}</b></li>
+						<li>Simbolos automata: <b>{S,A,B}</b></li>
+						<li>Conjunto de estados: <b>{p,q,r}</b></li>
+						<li>Estado inicial: <b>p</b></li>
+						<li>Simbolo inicial de pila: <b>S</b></li></lu>
+						 
+					</p>
+				</div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+			<div id="ejemploAutomata" class="modal fade -sm" role="dialog">
+				<div class="modal-dialog">
+			    	<div class="modal-content">
+			    		<div class="modal-header">
+			       			 <button type="button" class="close" data-dismiss="modal">&times;</button>
+			        		<h4 class="modal-title">Automata no determinista con transiciones &lambda;</h4>
+			      		</div>
+						<div class="modal-body">
+							<p>
+								{a,b};{S,A,B};{p,q,r};p;S;<br>
+								f(p,b,S)=(p,BS)<br>
+								f(p,b,B)=(p,BB)<br>
+								f(p, ,S)=(p, )<br>
+								f(p,b,B)=(r, )<br>
+								f(p,a,B)=(q, )<br>
+								f(q,a,B)=(q, )<br>
+								f(q, ,S)=(q, )<br>
+								f(q,b,B)=(r, )<br>
+								f(r,b,B)=(r, )<br>
+								f(r, ,S)=(r, )<br>
+							</p>
+						</div><!-- Cierre div body de modal ejemplo -->
+						<div class="modal-footer">
+							<p align="left"><b>Examen Diciembre 2014</b></p>
+			        		<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+			      		</div><!-- Cierre div pie del ejemplo -->		
+					</div>
+				</div>
+			</div><!-- Cierre div ejemplo -->	
+		</div>
+	
 	</div> 
 </body>
 </html>
