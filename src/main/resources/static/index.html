@@ -8,16 +8,13 @@
 	<link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.4/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/3.3.4/css/bootstrap.min.css}" rel="stylesheet" media="screen" />
 	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css"/>
 	
-	<script src="https://code.jquery.com/jquery-2.2.2.js"></script>
-<!-- 	<script src="http://code.jquery.com/jquery-1.9.1.js"></script> -->
-	<script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
 	<script src="js/App.js"></script>
-	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://code.jquery.com/jquery-2.2.2.js"></script>
+	<script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 </head>
 <body>
 	<!-- Imagen constante que permite suber al inicio de la página -->	
-	<a class='flotante' href='#' ><img src='img/flechaArriba.png' border="0"/></a>
 	<div class="row">
 		<div class="col-md-3">
 			<div class="panel panel-default">
@@ -33,9 +30,6 @@
 					<div class="btn-group">
 					</div>					
 					<input class="btn btn-success pull-right" type="submit" role="button" value="Generar" onclick="generarDefinicionLarga()" />					
-<!-- 					<pre id="imagenesSeleccionadas"><h5>Imágenes seleccionadas</h5></pre> -->
-<!-- 					se mostrará la lista de imagenes seleccionadas -->
-<!-- 					<div class="select-pictures" id="select-pictures"></div>					 -->
 				</div> <!-- Cierre div panel-body -->
 			</div><!-- Cierre div panel-default -->
 
@@ -65,7 +59,7 @@
 	     							<div class="col-xs-8">					
 										<input class="form-control col-xs-3" placeholder="Palabra" type='text' name='palabra' id='palabra'/>
 										<div id="divResultados">
-											<lu id="resultados"></lu>
+											<lu id="resultados"></ul>
 										</div>
 									</div>
 									<div class="col-xs-3">
@@ -79,11 +73,11 @@
 			</div>
 		</div>
 		<!-- Columna de modales de información auxiliar -->
-		<div class="col-rd-3"> 
+		<div class="col-rd-2"> 
 			<button type="button" class="btn btn-info" data-toggle="modal" data-target="#infoUtil">Ayuda</button><br><br>
 			<button type="button" class="btn btn-success" data-toggle="modal" data-target="#ejemploAutomata">Ejemplo de<br>definición <br> de automata</button>
 			
-			<!-- Modal consejos de uso-->
+			<!-- Modal guia de uso-->
 			<div id="infoUtil" class="modal fade modal -sm" role="dialog">
 			  <div class="modal-dialog">
 			
@@ -93,14 +87,44 @@
 				        <button type="button" class="close" data-dismiss="modal">&times;</button>
 				        <h4 class="modal-title">Formato de las definiciones de entrada para generar automatas</h4>
 				</div>
-				<div class="modal-body"> <!-- añadir color rojo al ejempl resultante -->
-					<p>En la primera linea se definiran separados por el simbolo <b>;</b> :<lu> 
-						<li>Alfabeto lenguaje: <b>{a,b}</b></li>
-						<li>Simbolos automata: <b>{S,A,B}</b></li>
-						<li>Conjunto de estados: <b>{p,q,r}</b></li>
-						<li>Estado inicial: <b>p</b></li>
-						<li>Simbolo inicial de pila: <b>S</b></li></lu>
-						 
+				<div class="modal-body">
+					<p>
+						<b>La primera linea contiene separados por el simbolo <b style="color:green">; </b>los siguientes elementos: </b>
+						<ol> 
+							<li>Alfabeto lenguaje: <b class="ejemploPlantilla">{a,b}</b></li>
+							<li>Simbolos automata: <b class="ejemploPlantilla">{S,A,B}</b></li>
+							<li>Conjunto de estados: <b class="ejemploPlantilla">{p,q,r}</b></li>
+							<li>Estado inicial: <b class="ejemploPlantilla">p</b></li>
+							<li>Simbolo inicial de pila: <b class="ejemploPlantilla">S</b></li>
+						</ol> 
+						 <i class="ejemplo">Ejemplo: {a,b};{S,A,B};{p,q,r};p;S;</i>					 
+					</p>
+					<p>
+						<b>Una transición por linea:</b>
+						<ol> 
+							<li>
+								Transicion de entrada: <b style="color:blue">f( , , )</b>
+								<ul>
+									<li>Estado origen: <b class="ejemploPlantilla">p</b></li>
+									<li>
+										Simbolo entrada: <b class="ejemploPlantilla">b</b>   
+										<i class="informacionAuxiliar">espacio en blanco = &lambda;</i>
+									</li>
+									<li>Simbolo cabeza pila: <b class="ejemploPlantilla">S</b></li>
+								</ul>
+							</li>
+							<li>Unión <b class="ejemploPlantilla">=</b></li>
+							<li>
+								Transición de salida: <b class="ejemploPlantilla">{p,q,r}</b>
+								<ul>
+									<li>Estado destino: <b class="ejemploPlantilla">p</b></li>
+									<li>Nueva cabeza de pila: <b class="ejemploPlantilla">BS</b></li>
+								</ul>
+							</li>
+							
+						</ol> 	
+						<i class="ejemplo">Ejemplo de transición: f(p,b,S)=(p,BS)</i><br>
+						<i class="ejemplo">Ejemplo de transición con  &lambda;: f(p,b,S)=(p,BS)</i>								 
 					</p>
 				</div>
 			      <div class="modal-footer">
@@ -108,7 +132,7 @@
 			      </div>
 			    </div>
 			  </div>
-			</div>
+			</div> <!-- Cierre modal guía de uso -->
 			<div id="ejemploAutomata" class="modal fade -sm" role="dialog">
 				<div class="modal-dialog">
 			    	<div class="modal-content">
@@ -138,8 +162,7 @@
 					</div>
 				</div>
 			</div><!-- Cierre div ejemplo -->	
-		</div>
-	
+		</div>	
 	</div> 
 </body>
 </html>

@@ -38,6 +38,8 @@ public class AutomataController {
 	@RequestMapping(value = "/Generate", method = RequestMethod.POST)
 	public ResponseEntity<?> generaAutomata(@RequestBody String entradaConsulta) throws IOException {
 		try{
+			if (automatasGenerados.size()> Utils.TAMANIO_MAPA_AUTOMATAS_GENERADOS)
+				automatasGenerados.clear();
 			//Trabajar directamente sobre el propio objeto, no devolver un automata nuevo dentro de automata
 			AutomataPila automata = new AutomataPila(Utils.correctorCharEspeciales(entradaConsulta));
 			automata.setIdAutomata(automatasGenerados.size()+1);

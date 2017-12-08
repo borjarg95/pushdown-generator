@@ -1,66 +1,28 @@
 body {
     background: url("../img/fondo.jpg");
-    background-size:100% 100%;
-	margin-left: 2cm !important;
-	margin-top: 1cm !important;
-}
-
-img {
-  margin: 1em;
-  display: inline-block !important;
-  -webkit-transition: all 1s ease;
-  -moz-transition: all 1s ease;
-  -o-transition: all 1s ease;
-  -ms-transition: all 1s ease;
-  transition: all 1s ease;
-  -webkit-transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
-  -o-transition: all 0.5s ease;
-  -ms-transition: all 0.5s ease;
-  transition: all 0.5s ease;
-}
-img.icon-img:hover {
-  cursor: pointer;
-  -webkit-transform: scale(1);
-  transform: scale(1);
-  -webkit-transition: .3s ease-in-out;
-  transition: .3s ease-in-out;
-  -webkit-transform: rotate(-10deg);
-  -moz-transform: rotate(-10deg);
-  -o-transform: rotate(-10deg);
-  -ms-transform: rotate(-10deg);
-  transform: rotate(-10deg);
-  border-radius: 50%;
-}
-
-#descripcionBody{
+    background-size:85% 100%;
+    background-repeat: repeat !important;
 	margin-left: 1cm !important;
-	text-align: justify !important;
-	margin-right: 3cm !important;
+	margin-top: 1cm !important;
 }
 pre, h3, h2{
   text-align: center;
 }
-pre.descripciones{ 
-	text-align: left;
-/* 	margin-right: 60% !important; */
-}
-
-#imagenesSeleccionadas {
-	margin-top: 0.75cm !important;
-}
-
-.flotante {
-    display:scroll;
-        position:fixed;
-        bottom: 0px;
-        right:0px;
-}
-
 span{
 	font-size: 14px !important;
 }
 
 #transiciones{
 	margin-left: 15% !important;
+}
+
+i.informacionAuxiliar{
+	font-size:9px !important; 
+}
+i.ejemplo{
+	color: #32a028 !important; /*verde oscuro*/
+	font-size:13px !important;
+}
+b.ejemploPlantilla{
+	color:red !important;
 }

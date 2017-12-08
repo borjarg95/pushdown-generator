@@ -18,6 +18,7 @@ public class Utils<E> {
 	public static final String SEPARADOR_TRANSICIONES = "=";
 	public static final Character LAMBDA = '@';
 	public static final String SALTO_LINEA = "\n";
+	public static final int TAMANIO_MAPA_AUTOMATAS_GENERADOS = 350;
 
 	public static boolean esSolucion(TransicionIn keyTransicion,TransicionIn tranLambda, Stack<Character> pila, int posPalabra, String palabraEntrada, String estadoActual, AutomataPila automata){
 

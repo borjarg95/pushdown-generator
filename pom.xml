@@ -2,8 +2,8 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>TFG</groupId>
   <artifactId>pushdownValidator</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
   <name>GeneradorAutomatas</name>
+  	<version>1.0.12</version>
   
  	<!-- Spring Boot necesario como proyecto padre -->
 	<parent>
@@ -27,19 +27,20 @@
           	<target/>
         	</configuration>
 		</plugin>
-<!-- 	    <plugin> -->
-<!-- 			<groupId>org.springframework.boot</groupId> -->
-<!-- 			<artifactId>spring-boot-maven-plugin</artifactId> -->
-<!-- 			<configuration> -->
-<!-- 			    <executable>true</executable> -->
-<!-- 			</configuration> -->
-<!-- 		</plugin> -->
+	    <plugin>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-maven-plugin</artifactId>
+			<configuration>
+			    <executable>true</executable>
+			</configuration>
+		</plugin>
     </plugins>
   </build>
   	<dependencies>
   		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
+			<version>4.12</version>
 			<scope>test</scope>
 			</dependency>
 
