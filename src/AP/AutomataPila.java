@@ -8,13 +8,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.ManagedBean;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RestController;
+
 import excepciones.AlfabetoNoValidoException;
 import main.GeneradorAutomataPila;
 
-
 public class AutomataPila {
 
-	private GeneradorAutomataPila generadorAutomataPila;
 	/**
 	 * @param alfabetoLenguaje
 	 * @param alfabetoPila
@@ -58,8 +63,7 @@ public class AutomataPila {
 		this.estadosFinales = finales;
 	}
 	
-	public AutomataPila generaAutomataConRuta(String ruta) throws FileNotFoundException, IOException, AlfabetoNoValidoException{
-		generadorAutomataPila = new GeneradorAutomataPila();
+	public AutomataPila generaAutomataConRuta(String ruta, GeneradorAutomataPila generadorAutomataPila) throws FileNotFoundException, IOException, AlfabetoNoValidoException{
 		return generadorAutomataPila.generaAutomataRuta(ruta);
 	}
 	
@@ -70,9 +74,8 @@ public class AutomataPila {
 	 * @throws IOException
 	 * @throws AlfabetoNoValidoException 
 	 */
-	public AutomataPila(String definicion) throws IOException, AlfabetoNoValidoException{
-		generadorAutomataPila = new GeneradorAutomataPila();
-		AutomataPila automata = generadorAutomataPila.generaAutomata(definicion);
+	public AutomataPila(String definicion, GeneradorAutomataPila generador) throws IOException, AlfabetoNoValidoException{
+		AutomataPila automata = generador.generaAutomata(definicion);
 		this.alfabetoLenguaje = automata.getAlfabetoLenguaje();
 		this.alfabetoPila =  automata.getAlfabetoPila();
 		this.estadosPila = automata.getEstadosPila();

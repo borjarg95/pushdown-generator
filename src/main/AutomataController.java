@@ -29,6 +29,10 @@ public class AutomataController {
 	@Qualifier("procesadorPalabras")
 	private ProcesadorPalabras procesadorPalabras;
 	
+	@Autowired
+	@Qualifier("generadorAutomataPila")
+	private GeneradorAutomataPila generadorAutomataPila;
+	
 	@RequestMapping(value= "/")
 	@ResponseBody
 	String home(){
@@ -41,7 +45,7 @@ public class AutomataController {
 			if (automatasGenerados.size()> Utils.TAMANIO_MAPA_AUTOMATAS_GENERADOS)
 				automatasGenerados.clear();
 			//Trabajar directamente sobre el propio objeto, no devolver un automata nuevo dentro de automata
-			AutomataPila automata = new AutomataPila(Utils.correctorCharEspeciales(entradaConsulta));
+			AutomataPila automata = new AutomataPila(Utils.correctorCharEspeciales(entradaConsulta), generadorAutomataPila);
 			automata.setIdAutomata(automatasGenerados.size()+1);
 			automatasGenerados.put(automata.getIdAutomata(), automata);
 			return new ResponseEntity<AutomataPila>(automata, HttpStatus.OK);

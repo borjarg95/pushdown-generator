@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.validator.GenericValidator;
+import org.springframework.stereotype.Service;
 
 import AP.AutomataPila;
 import AP.TransicionIn;
@@ -18,7 +19,7 @@ import excepciones.CodigosError;
  * @author Borjarg95
  *
  */
-
+@Service
 public class GeneradorAutomataPila {
 	
 	private BufferedReader b;
