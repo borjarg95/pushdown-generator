@@ -1,7 +1,9 @@
 package main;
 
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 import java.util.Stack;
 
@@ -25,9 +27,9 @@ public class ProcesadorPalabras {
 	 * @param transOut
 	 * @return
 	 */
-	private Stack<Character> pilaAuxiliar(Stack<Character> pila, TransicionOut transOut) {
+	private Deque<Character> pilaAuxiliar(Deque<Character> pila, TransicionOut transOut) {
 		
-		Stack<Character> pilaAux = new Stack<>();
+		Deque<Character> pilaAux = new ArrayDeque<>();
 		pilaAux.addAll(pila);
 
 		for (Character c : transOut.getNuevaCabezaPila()){
@@ -39,24 +41,24 @@ public class ProcesadorPalabras {
 	}
 	
 	/**
-	 * M�todo que permite verificar si una palabra pertenece al lenguaje del aut�mata.
+	 * Metodo que permite verificar si una palabra pertenece al lenguaje del aut�mata.
 	 * @param palabraEntrada no puede ser null, se valida desde el front.
 	 * @param automata
 	 * @return
 	 * @throws Exception
 	 */
-	public boolean compruebaPalabraBT(String palabraEntrada, AutomataPila automata) throws Exception{
+	public boolean compruebaPalabraBT(String palabraEntrada, AutomataPila automata) throws AlfabetoNoValidoException{
 		boolean pertenece = true; 
 		int i = 0;
 		char letraRechazada = 0;
 		palabraEntrada = palabraEntrada.trim(); //suprimimos los espacios en blanco en caso de que los haya
 		
 		//1� Comprobamos que los caracteres de entrada pertenecen al alfabeto
-		while (i<palabraEntrada.length()){
+		while (i<palabraEntrada.length() && pertenece){
 			pertenece = automata.getAlfabetoLenguaje().contains(palabraEntrada.charAt(i));
 			if (!pertenece){
 				letraRechazada = palabraEntrada.charAt(i);
-				break;
+				pertenece = false;
 			}
 			i++;
 		}
@@ -66,7 +68,7 @@ public class ProcesadorPalabras {
 		}
 		
 		//2� Cargamos la primera transicion para llamar al metodo recursivo de BT
-		Stack<Character> pila = new Stack<>();
+		Deque<Character> pila = new ArrayDeque<>();
 		pila.push(automata.getInicialPila());
 		String estadoActual = automata.getEstadoInicial();			
 		//posicion inicial = 0
@@ -88,7 +90,7 @@ public class ProcesadorPalabras {
 	 * @param pila
 	 * @return
 	 */
-	private boolean compruebaBT(String estadoActual, int posicionCadena, String palabraEntrada, Stack<Character> pila,AutomataPila automata) {
+	private boolean compruebaBT(String estadoActual, int posicionCadena, String palabraEntrada, Deque<Character> pila,AutomataPila automata) {
 		
 		if (pila.isEmpty()){
 			return (palabraEntrada.length() == posicionCadena);
@@ -107,7 +109,7 @@ public class ProcesadorPalabras {
 		//Recuperamos las posibles transiciones en el estado actual
 		Character cabezaConsumida = pila.pop();
 		//Guardamos la pila actual, de modo que cuando se haga backtracking todo esta guardado correctamente
-		Stack<Character> pilaAnterior = new Stack<>();
+		Deque<Character> pilaAnterior = new ArrayDeque<>();
 		pila.push(cabezaConsumida);
 		pilaAnterior.addAll(pila);
 		pila.pop();
@@ -156,7 +158,7 @@ public class ProcesadorPalabras {
 			}
 			/*Como no sabemos si el camino es correcto, creamos una pila auxiliar sin modificar la actual, 
 			en caso de que sea factible, actualizamos la pila principal*/
-			Stack<Character> pilaAux = pilaAuxiliar(pila, transOut);
+			Deque<Character> pilaAux = pilaAuxiliar(pila, transOut);
 
 			if (Utils.esFactible(transOut,pilaAux,palabraEntrada,posicionCadena)){
 				pila = pilaAux;

@@ -58,7 +58,7 @@ public class GeneradorAutomataPilaTest {
 		assertTrue(procesador.compruebaPalabraBT("ddddcba", automata));
 		assertTrue(procesador.compruebaPalabraBT("cdba", automata));
 		assertTrue(procesador.compruebaPalabraBT("cccbababa", automata));
-//		assertTrue(procesador.compruebaPalabraBT("ccba", automata)); //se vuelve loco haciendo backtraking, analizar
+		assertTrue(procesador.compruebaPalabraBT("ccba", automata)); //se vuelve loco haciendo backtraking, analizar
 		assertFalse(procesador.compruebaPalabraBT("cbad", automata));
 		
 	}

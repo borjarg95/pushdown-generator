@@ -1,6 +1,7 @@
 package main;
 
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.List;
 import java.util.Stack;
 
@@ -20,13 +21,13 @@ public class Utils<E> {
 	public static final String SALTO_LINEA = "\n";
 	public static final int TAMANIO_MAPA_AUTOMATAS_GENERADOS = 350;
 
-	public static boolean esSolucion(TransicionIn keyTransicion,TransicionIn tranLambda, Stack<Character> pila, int posPalabra, String palabraEntrada, String estadoActual, AutomataPila automata){
+	public static boolean esSolucion(TransicionIn keyTransicion,TransicionIn tranLambda, Deque<Character> pila, int posPalabra, String palabraEntrada, String estadoActual, AutomataPila automata){
 
 		return (pila.isEmpty() && posPalabra == palabraEntrada.length());
 
 	}	
 	
-	public static boolean esFactible(TransicionOut transicionesSalida, Stack<Character> pila, String palabraEntrada, int posicionCadena){
+	public static boolean esFactible(TransicionOut transicionesSalida, Deque<Character> pila, String palabraEntrada, int posicionCadena){
 		return (transicionesSalida!=null); //pila.isEmpty() && posicionCadena < palabraEntrada.length() ||
 				
 	}

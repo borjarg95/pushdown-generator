@@ -18,7 +18,6 @@ function generarDefinicionLarga() {
 		    },
 		    error: function (mensaje, textStatus)
 		    {
-		    	debugger;
 		    	alert(mensaje.responseText);
 		    }
 		});
@@ -42,14 +41,14 @@ function procesarAutomataResultante(automata){
 	//generar una linea por cada transicion entrada salida
 	for (var key in transiciones) {
 		var transicionesValue = "";		
-		for (i= 0; i < transiciones[key].length; i++){
+		for (var i= 0; i < transiciones[key].length; i++){
 			var estadoSalida = transiciones[key][i].estadoSalida;
 			var nuevaCabeceraPila = transiciones[key][i].nuevaCabezaPila.join('');
 			transicionesValue = transicionesValue.concat("["+ estadoSalida + ", " + nuevaCabeceraPila + "]");
 			if (transiciones[key].length > 1 && (i < transiciones[key].length -1)) 
 				transicionesValue = transicionesValue.concat(", ");
 		}
-		transLista = transicionesSalida.concat(key.replace("@", "&lambda;") 
+		var transLista = transicionesSalida.concat(key.replace("@", "&lambda;") 
 				+ " --> " + transicionesValue.replace("@", "&lambda;"));	
 		//añadimos a la lista a mostrar en la información
 		$("#transiciones").append("<li>"+transLista+ "</li>");		
@@ -65,17 +64,14 @@ function compruebaPalabra(){
 		palabra = "+";
 	}
 	var idAutomata = $("#identificador").val();
-	debugger;
 	var ruta = "/CheckWord/" + idAutomata + "/" + palabra;
 		$.ajax({
 		    url: ruta,
 		    type: 'GET',
 		    success: function(data){
-		    	debugger;
 		    	procesa_respuesta(data, palabra);
 		    },
 		    error: function(data) {
-		    	debugger;
 		    	procesa_respuesta(false, palabra);
 		        alert(data.responseText);
 		    }
@@ -87,7 +83,6 @@ function compruebaPalabra(){
 //Añade a la lista si la palabra está aceptada o no
 
 function procesa_respuesta(data, palabra){
-	debugger;
 	if (palabra=="+") palabra = "vacia"
 	if (data){
 		$("#resultados").append("<li>La palabra <b>"+ palabra + "</b> está aceptada.");

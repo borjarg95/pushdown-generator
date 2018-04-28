@@ -23,6 +23,8 @@ import excepciones.DatosEntradaErroneosException;
 @Service
 public class GeneradorAutomataPila {
 	
+	private BufferedReader bufferR;
+
 	public GeneradorAutomataPila(){
 		//constructor 
 	}
@@ -44,7 +46,7 @@ public class GeneradorAutomataPila {
 		}
 		
 		FileReader archivoEntrada = new FileReader(ruta);
-		BufferedReader bufferR = new BufferedReader(archivoEntrada);
+		bufferR = new BufferedReader(archivoEntrada);
 		
 		String[] camposPrimeraLinea = bufferR.readLine().split(Utils.SEPARADOR_CAMPOS);
 		AutomataPila automata = new AutomataPila();
@@ -267,9 +269,8 @@ public class GeneradorAutomataPila {
 		
 		//1	- Rellenamos el alfabeto del lenguaje
 		alfabetoLenguaje = alfabetoLenguaje.substring(1, alfabetoLenguaje.length()-1); //Suprimimos las llaves
-		String[] vectorAlfaLeng = alfabetoLenguaje.split(Utils.SEPARADOR_ELEMENTOS_CAMPO);		
 
-		for (String a : vectorAlfaLeng) {
+		for (String a : alfabetoLenguaje.split(Utils.SEPARADOR_ELEMENTOS_CAMPO)) {
 			if (a.length()!=1) {
 				throw new DatosEntradaErroneosException("Los elementos del alfabeto son caracteres, "
 						+ "no puede ser un string compuesto");
@@ -291,8 +292,7 @@ public class GeneradorAutomataPila {
 		
 		//3 - Rellenamos los estados del automata
 		estados = estados.substring(1, estados.length()-1); //suprimimos los corchetes
-		String[] vectorEstados = estados.split(Utils.SEPARADOR_ELEMENTOS_CAMPO);
-		for (String a : vectorEstados){
+		for (String a : estados.split(Utils.SEPARADOR_ELEMENTOS_CAMPO)){
 			if (GenericValidator.isBlankOrNull(a)){
 				throw new DatosEntradaErroneosException("Alguno de los estados introducios esta vacio. "
 						+ "Deben informarse correctamente");
