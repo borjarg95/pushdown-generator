@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import AP.AutomataPila;
@@ -14,7 +15,7 @@ import excepciones.AlfabetoNoValidoException;
 
 @Service
 public class ProcesadorPalabras {
-
+	static Logger log = Logger.getLogger(ProcesadorPalabras.class.getName());
 	public ProcesadorPalabras(){}
 	
 	/**
@@ -51,7 +52,7 @@ public class ProcesadorPalabras {
 		palabraEntrada = palabraEntrada.trim(); //suprimimos los espacios en blanco en caso de que los haya
 		
 		//1� Comprobamos que los caracteres de entrada pertenecen al alfabeto
-		while (pertenece && (i<palabraEntrada.length())){
+		while (i<palabraEntrada.length()){
 			pertenece = automata.getAlfabetoLenguaje().contains(palabraEntrada.charAt(i));
 			if (!pertenece){
 				letraRechazada = palabraEntrada.charAt(i);
@@ -72,9 +73,9 @@ public class ProcesadorPalabras {
 		boolean resultado = compruebaBT(estadoActual, 0, palabraEntrada, pila,automata);
 		String palabra = palabraEntrada.isEmpty() ? "vacia" : palabraEntrada;
 		if (resultado){
-			System.out.println("La palabra: "+palabra+" esta aceptada por el automata.");
+			log.info("La palabra: "+palabra+" esta aceptada por el automata.");
 		} else {
-			System.out.println("La palabra: "+palabra+" NO esta aceptada por el automata.");
+			log.info("La palabra: "+palabra+" NO esta aceptada por el automata.");
 		}
 		return resultado;
 	}
@@ -90,11 +91,7 @@ public class ProcesadorPalabras {
 	private boolean compruebaBT(String estadoActual, int posicionCadena, String palabraEntrada, Stack<Character> pila,AutomataPila automata) {
 		
 		if (pila.isEmpty()){
-			if (palabraEntrada.length() == posicionCadena){
-				return true;
-			} else{
-				return false;
-			}
+			return (palabraEntrada.length() == posicionCadena);
 		}
 		Character caracterEntrada = null;
 		if (posicionCadena > 0 && posicionCadena >= palabraEntrada.length()){
@@ -109,7 +106,7 @@ public class ProcesadorPalabras {
 		
 		//Recuperamos las posibles transiciones en el estado actual
 		Character cabezaConsumida = pila.pop();
-		//Guardamos la pila actual, de modo que cuando se haga backtraking todo est� guardado correctamente
+		//Guardamos la pila actual, de modo que cuando se haga backtracking todo esta guardado correctamente
 		Stack<Character> pilaAnterior = new Stack<>();
 		pila.push(cabezaConsumida);
 		pilaAnterior.addAll(pila);

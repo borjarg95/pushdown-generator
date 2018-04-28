@@ -27,12 +27,7 @@ public class Utils<E> {
 	}	
 	
 	public static boolean esFactible(TransicionOut transicionesSalida, Stack<Character> pila, String palabraEntrada, int posicionCadena){
-		
-		if (transicionesSalida==null){ //pila.isEmpty() && posicionCadena < palabraEntrada.length() ||
-			return false; 
-		} else {
-			return true;
-		}
+		return (transicionesSalida!=null); //pila.isEmpty() && posicionCadena < palabraEntrada.length() ||
 				
 	}
 	/**

@@ -8,14 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.ManagedBean;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RestController;
-
 import excepciones.AlfabetoNoValidoException;
+import excepciones.DatosEntradaErroneosException;
 import main.GeneradorAutomataPila;
 
 public class AutomataPila {
@@ -51,7 +45,7 @@ public class AutomataPila {
 	 * @param funcionesTransicion f
 	 * @param finales F
 	 */	
-	public AutomataPila(HashSet<Character> alfabetoLenguaje, HashSet<Character> alfabetoPila, HashSet<String> estadosPila,
+	public AutomataPila(Set<Character> alfabetoLenguaje, Set<Character> alfabetoPila, Set<String> estadosPila,
 			Character inicialPila, String estadoInicial, Map<TransicionIn, List<TransicionOut>> funcionesTransicion,
 			List<String> finales) {
 		this.alfabetoLenguaje = alfabetoLenguaje;
@@ -63,7 +57,7 @@ public class AutomataPila {
 		this.estadosFinales = finales;
 	}
 	
-	public AutomataPila generaAutomataConRuta(String ruta, GeneradorAutomataPila generadorAutomataPila) throws FileNotFoundException, IOException, AlfabetoNoValidoException{
+	public AutomataPila generaAutomataConRuta(String ruta, GeneradorAutomataPila generadorAutomataPila) throws IOException, AlfabetoNoValidoException, DatosEntradaErroneosException{
 		return generadorAutomataPila.generaAutomataRuta(ruta);
 	}
 	
@@ -73,8 +67,9 @@ public class AutomataPila {
 	 * @return
 	 * @throws IOException
 	 * @throws AlfabetoNoValidoException 
+	 * @throws DatosEntradaErroneosException 
 	 */
-	public AutomataPila(String definicion, GeneradorAutomataPila generador) throws IOException, AlfabetoNoValidoException{
+	public AutomataPila(String definicion, GeneradorAutomataPila generador) throws IOException, AlfabetoNoValidoException, DatosEntradaErroneosException{
 		AutomataPila automata = generador.generaAutomata(definicion);
 		this.alfabetoLenguaje = automata.getAlfabetoLenguaje();
 		this.alfabetoPila =  automata.getAlfabetoPila();
@@ -97,7 +92,7 @@ public class AutomataPila {
 		this.alfabetoLenguaje = new HashSet<>();
 		this.alfabetoPila = new HashSet<>();
 		this.estadosPila = new HashSet<>();
-		this.inicialPila = new Character(' ');
+		this.inicialPila = ' ';
 		this.estadoInicial = new String();
 		this.funcionesTransicion = new HashMap<>();
 		this.estadosFinales = new ArrayList<>();
@@ -120,9 +115,6 @@ public class AutomataPila {
 	}
 	public Map<TransicionIn, List<TransicionOut>> getFuncionesTransicion() {
 		return funcionesTransicion;
-	}
-	public List<String> getFinales() {
-		return estadosFinales;
 	}
 	public List<String> getEstadosFinales() {
 		return estadosFinales;
@@ -148,6 +140,12 @@ public class AutomataPila {
 	public void setEstadosFinales(List<String> estadosFinales) {
 		this.estadosFinales = estadosFinales;
 	}
+	public int getIdAutomata() {
+		return idAutomata;
+	}
+	public void setIdAutomata(int idAutomata) {
+		this.idAutomata = idAutomata;
+	}	
 	/**
 	 * Devuelve el conjunto de todas las transiciones vacias. 
 	 * Nos permitirá gestionar las transiciones de vaciado del autómatada.
@@ -180,6 +178,7 @@ public class AutomataPila {
 		return result;
 	}
 
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -240,13 +239,4 @@ public class AutomataPila {
 				+ ", estadosPila=" + estadosPila + ", inicialPila=" + inicialPila + ", estadoInicial=" + estadoInicial
 				+ ", funcionesTransicion=" + funcionesTransicion + ", estadosFinales=" + estadosFinales + "]";
 	}
-
-	public int getIdAutomata() {
-		return idAutomata;
-	}
-
-	public void setIdAutomata(int idAutomata) {
-		this.idAutomata = idAutomata;
-	}
-	
 }

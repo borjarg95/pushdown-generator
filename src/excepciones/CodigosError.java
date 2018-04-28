@@ -3,8 +3,9 @@ package excepciones;
 public enum CodigosError {
 	
 	ALFABETO_LENGUAJE("El alfabeto del lenguaje no está correctamente informado."),
-	ALFABETO_PILA("El alfabeto de la pila no está correctamente informado.");
-	
+	ALFABETO_PILA("El alfabeto de la pila no está correctamente informado."),
+	MAL_FORMADA(", no esta bien formada"),
+	TRANSICION_DE_LA_LINEA("La transici�n de la linea ");
 	private String value;
 	
 	CodigosError(String value){

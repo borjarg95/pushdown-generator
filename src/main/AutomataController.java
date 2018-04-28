@@ -48,9 +48,9 @@ public class AutomataController {
 			AutomataPila automata = new AutomataPila(Utils.correctorCharEspeciales(entradaConsulta), generadorAutomataPila);
 			automata.setIdAutomata(automatasGenerados.size()+1);
 			automatasGenerados.put(automata.getIdAutomata(), automata);
-			return new ResponseEntity<AutomataPila>(automata, HttpStatus.OK);
+			return new ResponseEntity<>(automata, HttpStatus.OK);
 		}catch (Throwable e){
-			return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
 		}
 	}
 	
@@ -65,12 +65,12 @@ public class AutomataController {
 		if (automatasGenerados.get(Integer.valueOf(index)) != null){
 			//Crear metodo en automata para validar palabras utilizando el procesador en lugar de al revés
 			try{
-				return new ResponseEntity<Boolean>(procesadorPalabras.compruebaPalabraBT(Utils.correctorCharEspeciales(palabra), automatasGenerados.get(Integer.valueOf(index))), HttpStatus.OK);
+				return new ResponseEntity<>(procesadorPalabras.compruebaPalabraBT(Utils.correctorCharEspeciales(palabra), automatasGenerados.get(Integer.valueOf(index))), HttpStatus.OK);
 			} catch (AlfabetoNoValidoException e){
-				return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
+				return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
 			}
 		} else {
-			return new ResponseEntity<String>("El automata no se ha cargado correctamente, por favor vuelve a generarlo.", HttpStatus.INSUFFICIENT_STORAGE); 
+			return new ResponseEntity<>("El automata no se ha cargado correctamente, por favor vuelve a generarlo.", HttpStatus.INSUFFICIENT_STORAGE); 
 		}
 	}
 }
