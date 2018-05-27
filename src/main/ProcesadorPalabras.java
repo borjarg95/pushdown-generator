@@ -4,10 +4,10 @@ package main;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Stack;
+import java.util.logging.Logger;
 
-import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import AP.AutomataPila;
@@ -75,9 +75,9 @@ public class ProcesadorPalabras {
 		boolean resultado = compruebaBT(estadoActual, 0, palabraEntrada, pila,automata);
 		String palabra = palabraEntrada.isEmpty() ? "vacia" : palabraEntrada;
 		if (resultado){
-			log.info("La palabra: "+palabra+" esta aceptada por el automata.");
+			log.info("La palabra: "+palabra+" esta aceptada por el automata: "+automata.getIdAutomata());
 		} else {
-			log.info("La palabra: "+palabra+" NO esta aceptada por el automata.");
+			log.info("La palabra: "+palabra+" NO esta aceptada por el automata: "+automata.getIdAutomata());
 		}
 		return resultado;
 	}
@@ -91,14 +91,14 @@ public class ProcesadorPalabras {
 	 * @return
 	 */
 	private boolean compruebaBT(String estadoActual, int posicionCadena, String palabraEntrada, Deque<Character> pila,AutomataPila automata) {
-		
-		if (pila.isEmpty()){
+//		registrarEntradaBackTraking(estadoActual, posicionCadena, palabraEntrada, pila);
+		if (pila.isEmpty()) {
 			return (palabraEntrada.length() == posicionCadena);
 		}
 		Character caracterEntrada = null;
-		if (posicionCadena > 0 && posicionCadena >= palabraEntrada.length()){
+		if (posicionCadena > 0 && posicionCadena >= palabraEntrada.length()) {
 			TransicionIn tranEntrada = new TransicionIn(estadoActual, Utils.LAMBDA, pila.peek());
-			if (automata.getFuncionesTransicion().get(tranEntrada) == null){
+			if (automata.getFuncionesTransicion().get(tranEntrada) == null) {
 				return false;
 			}
 			caracterEntrada = Utils.LAMBDA;
@@ -113,26 +113,27 @@ public class ProcesadorPalabras {
 		pila.push(cabezaConsumida);
 		pilaAnterior.addAll(pila);
 		pila.pop();
-		String estadoAnterior = new String(estadoActual);	
+		String estadoAnterior = estadoActual;	
 		
 		TransicionIn tranEntrada = new TransicionIn(estadoActual, caracterEntrada, cabezaConsumida);
 		TransicionIn tranLambda = null;
 		List<TransicionOut> transicionesSalida = null;
 		
-		if (automata.getFuncionesTransicion().get(tranEntrada) !=null){
+		if (automata.getFuncionesTransicion().get(tranEntrada) !=null) {
 			transicionesSalida = new ArrayList<>(automata.getFuncionesTransicion().get(tranEntrada));
 		} 
 		
-		if (transicionesSalida == null || transicionesSalida.isEmpty()){
+		if (Utils.esCollecionVaciaONull(transicionesSalida)) {
 			pila.push(tranEntrada.getSimbCabezaPila());		
 			tranEntrada = new TransicionIn(estadoActual, Utils.LAMBDA, pila.pop());
-			if (automata.getFuncionesTransicion().get(tranEntrada) != null)
+			if (automata.getFuncionesTransicion().get(tranEntrada) != null){
 				transicionesSalida = new ArrayList<>(automata.getFuncionesTransicion().get(tranEntrada));			
+			}
 		} else {
 			tranLambda = new TransicionIn(estadoActual, Utils.LAMBDA, tranEntrada.getSimbCabezaPila());
-			if (automata.getFuncionesTransicion().get(tranLambda) != null){
+			if (automata.getFuncionesTransicion().get(tranLambda) != null) {
 				List<TransicionOut> transSalidaLambda = new ArrayList<>(automata.getFuncionesTransicion().get(tranLambda));
-				for (TransicionOut transicion :transSalidaLambda){
+				for (TransicionOut transicion :transSalidaLambda) {
 					if (!transicionesSalida.contains(transicion))
 						transicionesSalida.add(transicion);
 				}
@@ -141,40 +142,33 @@ public class ProcesadorPalabras {
 		
 		//Utilizamos la variable exito para salir del BT
 		boolean exito = false;
-		if (transicionesSalida == null || transicionesSalida.isEmpty()){
+		if (Utils.esCollecionVaciaONull(transicionesSalida)) {
 			return false;
 		}
-		for(int i=0; i<transicionesSalida.size() && !exito ; i++){
-
+		for(int i=0; i<transicionesSalida.size() && !exito ; i++) {
 			TransicionOut transOut = transicionesSalida.get(i);
-			if (i!=0 && tranEntrada.getSimbEntrada()!=Utils.LAMBDA &&
-					automata.getFuncionesTransicion().get(tranEntrada)!=null &&
-					automata.getFuncionesTransicion().get(tranEntrada).contains(transOut)){
-				if (pila.isEmpty()){
-					continue; //sino return false
-				} else{
+
+			if (i!=0 && tranEntrada.getSimbEntrada()!=Utils.LAMBDA 
+					&& automata.getFuncionesTransicion().get(tranEntrada)!=null 
+					&&automata.getFuncionesTransicion().get(tranEntrada).contains(transOut)) {
+				if (!pila.isEmpty()) {
 					pila.pop();
 				}
 			}
-			/*Como no sabemos si el camino es correcto, creamos una pila auxiliar sin modificar la actual, 
-			en caso de que sea factible, actualizamos la pila principal*/
-			Deque<Character> pilaAux = pilaAuxiliar(pila, transOut);
 
-			if (Utils.esFactible(transOut,pilaAux,palabraEntrada,posicionCadena)){
+			Deque<Character> pilaAux = pilaAuxiliar(pila, transOut);
+			if (Utils.esFactible(transOut,pilaAux,palabraEntrada,posicionCadena)) {
 				pila = pilaAux;
 				estadoActual = transOut.getEstadoSalida();
 
-				if (Utils.esSolucion(tranEntrada,tranLambda, pila, posicionCadena, palabraEntrada, estadoActual, automata)){
+				if (Utils.esSolucion(tranEntrada,tranLambda, pila, posicionCadena, palabraEntrada, estadoActual, automata)) {
 					exito = true;
 					break;
 				} else {
-					if ((tranLambda !=null && (automata.getFuncionesTransicion().get(tranEntrada) == null)) 
-							|| ((tranLambda == null) && (tranEntrada.getSimbEntrada() == Utils.LAMBDA))
-							|| tranEntrada.equals(tranLambda)){
+					if (Utils.esTransicionEntradaSoloLambda(automata, tranEntrada, tranLambda)) {
 						exito = compruebaBT(estadoActual, posicionCadena, palabraEntrada, pila, automata);							
 					} else {
 						exito = compruebaBT(estadoActual, posicionCadena+1, palabraEntrada, pila,automata);
-
 					}
 					if (!exito){
 						pila = pilaAnterior;
@@ -186,5 +180,17 @@ public class ProcesadorPalabras {
 			}
 		}
 		return exito;
+	}
+
+	private void registrarEntradaBackTraking(String estadoActual, int posicionCadena, String palabraEntrada, Deque<Character> pila) {
+		Iterator<Character> pilaTraza = pila.descendingIterator();
+		StringBuilder sb = new StringBuilder("[");
+		while (pilaTraza.hasNext())
+			sb.append(pilaTraza.next()+",");
+		sb.append("]");
+		log.info("Estado actual:"+estadoActual + 
+				" posicionPalabra: "+posicionCadena+
+				", palabraEntrada: "+palabraEntrada+
+				" PILA: " + sb.toString());
 	}
 }

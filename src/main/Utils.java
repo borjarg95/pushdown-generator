@@ -1,6 +1,7 @@
 package main;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Deque;
 import java.util.List;
 import java.util.Stack;
@@ -9,7 +10,7 @@ import AP.AutomataPila;
 import AP.TransicionIn;
 import AP.TransicionOut;
 
-public class Utils<E> {
+public class Utils <E>{
 
 	public static final int ARGUMENTOS_LINEA0 = 5;
 	public static final String SEPARADOR_CAMPOS = ";";
@@ -31,6 +32,27 @@ public class Utils<E> {
 		return (transicionesSalida!=null); //pila.isEmpty() && posicionCadena < palabraEntrada.length() ||
 				
 	}
+	
+	/**
+	 * Dado 
+	 * @param automata
+	 * @param tranEntrada
+	 * @param tranLambda
+	 * comprueba en la situción del automata únicamente se pueda realizar la transición lambda. 
+	 * Esto implica que BT se realiza sobre la misma posición de la cadena de entrada, es decir, se itera sin leer un nuevo caracter de la palabra
+	 * @return
+	 */
+	public static boolean esTransicionEntradaSoloLambda(AutomataPila automata, TransicionIn tranEntrada, TransicionIn tranLambda) {
+		return (tranLambda !=null && (automata.getFuncionesTransicion().get(tranEntrada) == null)) 
+				|| ((tranLambda == null) && (tranEntrada.getSimbEntrada() == Utils.LAMBDA))
+				|| tranEntrada.equals(tranLambda);
+	}
+	
+	public static <E> boolean esCollecionVaciaONull(Collection<E> coleccion){
+		return coleccion == null || coleccion.isEmpty();
+	}
+	
+	
 	/**
 	 * Devuelve una lista recibiendo un array del objeto
 	 * @param array

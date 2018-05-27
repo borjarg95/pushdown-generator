@@ -58,7 +58,9 @@ public class GeneradorAutomataPilaTest {
 		assertTrue(procesador.compruebaPalabraBT("ddddcba", automata));
 		assertTrue(procesador.compruebaPalabraBT("cdba", automata));
 		assertTrue(procesador.compruebaPalabraBT("cccbababa", automata));
-		assertTrue(procesador.compruebaPalabraBT("ccba", automata)); //se vuelve loco haciendo backtraking, analizar
+		assertFalse(procesador.compruebaPalabraBT("ccba", automata)); //no debe aceptarse ya que por 2 c's, deberia haber 2 veces "ba"
+		assertTrue(procesador.compruebaPalabraBT("ccbaba", automata));
+		assertTrue(procesador.compruebaPalabraBT("cccbababa", automata));
 		assertFalse(procesador.compruebaPalabraBT("cbad", automata));
 		
 	}
@@ -128,11 +130,7 @@ public class GeneradorAutomataPilaTest {
 		assertTrue(procesador.compruebaPalabraBT("bbbbbb", automata));
 		assertFalse(procesador.compruebaPalabraBT("a", automata));
 		assertFalse(procesador.compruebaPalabraBT("aa", automata));
-		
-//		assertFalse(procesador.compruebaPalabraBT("bbb", automata));
-//		assertFalse(procesador.compruebaPalabraBT("bbba", automata));
-//		assertFalse(procesador.compruebaPalabraBT("bba", automata));
-		
+			
 	}
 	
 	@Test

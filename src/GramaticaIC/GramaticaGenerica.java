@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import AP.AutomataPila;
 import AP.TransicionIn;
 import AP.TransicionOut;
@@ -29,6 +31,9 @@ import main.Utils;
  */
 public class GramaticaGenerica {
 
+	@Autowired
+	ProcesadorPalabras procesador;
+	
 	/**
 	 * Ejemplo de produccion:
 	 * 		Z --> lambda | {a,[pAp],[pAq]}		El conjunto esta formado por lambda y "{a,[pAp],[pAq]}"
@@ -78,7 +83,6 @@ public class GramaticaGenerica {
 		String lambda = Character.toString(Utils.LAMBDA);
 		HashMap<Character, Set<LinkedList<PlantillaProduccion>>> mapaProducciones = new HashMap<>();
 		PlantillaProduccion produccionAux = null;		
-		ProcesadorPalabras procesador = new ProcesadorPalabras();
 		
 		//2- SI EL AUTOMATA ACEPTA LA PALABRA VACÍA, INCLUIMOS LA PRODUCCIÓN LAMBDA EN EL AXIOMA
 		if (procesador.compruebaPalabraBT(lambda, automata)){
