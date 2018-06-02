@@ -23,7 +23,7 @@ import excepciones.DatosEntradaErroneosException;
 @Service
 public class GeneradorAutomataPila {
 	
-	private BufferedReader bufferR;
+	private BufferedReader bufferReader;
 
 	public GeneradorAutomataPila(){
 		//constructor 
@@ -46,16 +46,16 @@ public class GeneradorAutomataPila {
 		}
 		
 		FileReader archivoEntrada = new FileReader(ruta);
-		bufferR = new BufferedReader(archivoEntrada);
+		bufferReader = new BufferedReader(archivoEntrada);
 		
-		String[] camposPrimeraLinea = bufferR.readLine().split(Utils.SEPARADOR_CAMPOS);
+		String[] camposPrimeraLinea = bufferReader.readLine().split(Utils.SEPARADOR_CAMPOS);
 		AutomataPila automata = new AutomataPila();
 		procesaPrimeraLinea(automata, camposPrimeraLinea);
 
 		//TRANSICIONES Y ESTADOS FINALES
 		String linea;
 		int line = 1; //inicializamos el valor a 1 porque ya hemos procesado la primera linea del fichero	
-		while ((linea = bufferR.readLine())!=null){
+		while ((linea = bufferReader.readLine())!=null){
 			line++;
 			if (linea.startsWith(Utils.INICIO_CAMPO) && (linea.endsWith(Utils.FIN_CAMPO))){ //Es la ultima linea --> Conjunto estados finales			
 				automata.setEstadosFinales(new ArrayList<String>());
@@ -103,7 +103,7 @@ public class GeneradorAutomataPila {
 				}
 			}
 		}	
-		bufferR.close();
+		bufferReader.close();
 		return automata;
 	}
 	
