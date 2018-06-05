@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import excepciones.AlfabetoNoValidoException;
 
 @RestController
 public class AutomataController {
+	private static final Logger logger = Logger.getLogger(AutomataController.class.getName());
 	private Map<Integer, AutomataPila> automatasGenerados = new HashMap<>();
 
 	public AutomataController() {
@@ -32,20 +34,20 @@ public class AutomataController {
 	@Autowired
 	@Qualifier("generadorAutomataPila")
 	private GeneradorAutomataPila generadorAutomataPila;
-
+ 
 	@RequestMapping(value = "/Generate", method = RequestMethod.POST)
-	public ResponseEntity<?> generaAutomata(@RequestBody String entradaConsulta) throws IOException {
+	public ResponseEntity<?> generaAutomata(@RequestBody String entrada) throws IOException {
+		String entradaConsulta = Utils.correctorCharEspeciales(entrada);
 		try {
 			if (automatasGenerados.size() > Utils.TAMANIO_MAPA_AUTOMATAS_GENERADOS)
 				automatasGenerados.clear();
-			// Trabajar directamente sobre el propio objeto, no devolver un
-			// automata nuevo dentro de automata
-			AutomataPila automata = new AutomataPila(Utils.correctorCharEspeciales(entradaConsulta),
-					generadorAutomataPila);
+			AutomataPila automata = new AutomataPila(entradaConsulta, generadorAutomataPila);
 			automata.setIdAutomata(automatasGenerados.size() + 1);
 			automatasGenerados.put(automata.getIdAutomata(), automata);
+			logger.debug("se genera correctamente el automata: "+automata.getIdAutomata() +" "+entradaConsulta);
 			return new ResponseEntity<>(automata, HttpStatus.OK);
-		} catch (Throwable e) {
+		} catch (Exception e) {
+			logger.error("Error en la generación del automata " + entradaConsulta + " " + e.getMessage());
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
 		}
 	}

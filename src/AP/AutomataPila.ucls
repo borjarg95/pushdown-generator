@@ -4,7 +4,7 @@
   <class id="1" language="java" name="AP.AutomataPila" project="pushdown-generator" 
     file="/pushdown-generator/src/AP/AutomataPila.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="207" width="319" x="83" y="37"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="true" signature="true" 
+    <display autosize="true" stereotype="true" package="false" initial-value="true" signature="false" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="false" package="false" protected="true" private="false" static="true"/>    
@@ -13,33 +13,37 @@
   <class id="2" language="java" name="AP.TransicionIn" project="pushdown-generator" 
     file="/pushdown-generator/src/AP/TransicionIn.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="112" width="129" x="41" y="284"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
-      sort-features="false" accessors="true" visibility="true">      
-      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
-      <operations public="false" package="false" protected="false" private="false" static="true"/>    
-    </display>  
-  </class>  
-  <class id="3" language="java" name="AP.TransicionOut" project="pushdown-generator" 
-    file="/pushdown-generator/src/AP/TransicionOut.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="99" width="192" x="210" y="284"/>    
-    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    <display autosize="true" stereotype="true" package="false" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
       <operations public="false" package="false" protected="false" private="true" static="true"/>    
     </display>  
   </class>  
-  <association id="4">    
+  <class id="3" language="java" name="AP.TransicionOut" project="pushdown-generator" 
+    file="/pushdown-generator/src/AP/TransicionOut.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="99" width="192" x="210" y="284"/>    
+    <display autosize="true" stereotype="true" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="false" package="false" protected="false" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <dependency id="4">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <association id="5">    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="5" name="transicionesVaciado"/>      
-      <multiplicity id="6" minimum="0" maximum="2147483647"/>    
+      <attribute id="6" name="transicionesVaciado">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="7" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
     </end>    
     <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <dependency id="7">    
-    <end type="SOURCE" refId="1"/>    
-    <end type="TARGET" refId="3"/>  
-  </dependency>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    

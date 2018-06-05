@@ -1,5 +1,6 @@
 package main;
 
+import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Deque;
@@ -115,5 +116,25 @@ public class Utils <E>{
 			
 		}
 		return correccion;
+	}
+	
+	/**
+	 * Genera una nueva pila con la siguiente transici�n, 
+	 * permitiendo mantener el valor de la pila actual en caso de que transici�n no sea v�lida
+	 * @param pila
+	 * @param transOut
+	 * @return
+	 */
+	public static Deque<Character> pilaAuxiliar(Deque<Character> pila, TransicionOut transOut) {
+		
+		Deque<Character> pilaAux = new ArrayDeque<>();
+		pilaAux.addAll(pila);
+
+		for (Character c : transOut.getNuevaCabezaPila()){
+			if (c != Utils.LAMBDA){
+				pilaAux.push(c);
+			}
+		}
+		return pilaAux;
 	}
 }

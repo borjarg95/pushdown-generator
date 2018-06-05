@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Logger;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import AP.AutomataPila;
@@ -19,26 +19,6 @@ import excepciones.AlfabetoNoValidoException;
 public class ProcesadorPalabras {
 	static Logger log = Logger.getLogger(ProcesadorPalabras.class.getName());
 	public ProcesadorPalabras(){}
-	
-	/**
-	 * Genera una nueva pila con la siguiente transici�n, 
-	 * permitiendo mantener el valor de la pila actual en caso de que transici�n no sea v�lida
-	 * @param pila
-	 * @param transOut
-	 * @return
-	 */
-	private Deque<Character> pilaAuxiliar(Deque<Character> pila, TransicionOut transOut) {
-		
-		Deque<Character> pilaAux = new ArrayDeque<>();
-		pilaAux.addAll(pila);
-
-		for (Character c : transOut.getNuevaCabezaPila()){
-			if (c != Utils.LAMBDA){
-				pilaAux.push(c);
-			}
-		}
-		return pilaAux;
-	}
 	
 	/**
 	 * Metodo que permite verificar si una palabra pertenece al lenguaje del aut�mata.
@@ -149,14 +129,14 @@ public class ProcesadorPalabras {
 			TransicionOut transOut = transicionesSalida.get(i);
 
 			if (i!=0 && tranEntrada.getSimbEntrada()!=Utils.LAMBDA 
-					&& automata.getFuncionesTransicion().get(tranEntrada)!=null 
-					&&automata.getFuncionesTransicion().get(tranEntrada).contains(transOut)) {
+					 && automata.getFuncionesTransicion().get(tranEntrada)!=null 
+					 && automata.getFuncionesTransicion().get(tranEntrada).contains(transOut)) {
 				if (!pila.isEmpty()) {
 					pila.pop();
 				}
 			}
 
-			Deque<Character> pilaAux = pilaAuxiliar(pila, transOut);
+			Deque<Character> pilaAux = Utils.pilaAuxiliar(pila, transOut);
 			if (Utils.esFactible(transOut,pilaAux,palabraEntrada,posicionCadena)) {
 				pila = pilaAux;
 				estadoActual = transOut.getEstadoSalida();
