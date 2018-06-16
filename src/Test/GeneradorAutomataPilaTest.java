@@ -130,7 +130,16 @@ public class GeneradorAutomataPilaTest {
 		assertTrue(procesador.compruebaPalabraBT("bbbbbb", automata));
 		assertFalse(procesador.compruebaPalabraBT("a", automata));
 		assertFalse(procesador.compruebaPalabraBT("aa", automata));
-			
+		assertFalse(procesador.compruebaPalabraBT("bbabb", automata));
+		assertTrue(procesador.compruebaPalabraBT("bbbbbbabbbbb", automata));
+		assertTrue(procesador.compruebaPalabraBT("bbbbbbaabbbb", automata));
+		assertTrue(procesador.compruebaPalabraBT("bbbbbaaabb", automata));
+		assertFalse(procesador.compruebaPalabraBT("bbbbaaabb", automata));
+		assertTrue(procesador.compruebaPalabraBT("bbbbaaab", automata));
+		assertTrue(procesador.compruebaPalabraBT("bbbbaaaa", automata));
+		assertTrue(procesador.compruebaPalabraBT("bbbbaaaa", automata));
+		assertFalse(procesador.compruebaPalabraBT("bbbaaaa", automata));
+		
 	}
 	
 	@Test
@@ -157,6 +166,5 @@ public class GeneradorAutomataPilaTest {
 		assertTrue(procesador.compruebaPalabraBT("bbbbbb", automata));
 		assertFalse(procesador.compruebaPalabraBT("a", automata));
 		assertFalse(procesador.compruebaPalabraBT("aa", automata));
-
 	}
 }

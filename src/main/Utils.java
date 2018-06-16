@@ -23,16 +23,10 @@ public class Utils <E>{
 	public static final String SALTO_LINEA = "\n";
 	public static final int TAMANIO_MAPA_AUTOMATAS_GENERADOS = 350;
 
-	public static boolean esSolucion(TransicionIn keyTransicion,TransicionIn tranLambda, Deque<Character> pila, int posPalabra, String palabraEntrada, String estadoActual, AutomataPila automata){
+	public static boolean esSolucion(Deque<Character> pila, int posPalabra, String palabraEntrada){
 
 		return (pila.isEmpty() && posPalabra == palabraEntrada.length());
-
 	}	
-	
-	public static boolean esFactible(TransicionOut transicionesSalida, Deque<Character> pila, String palabraEntrada, int posicionCadena){
-		return (transicionesSalida!=null); //pila.isEmpty() && posicionCadena < palabraEntrada.length() ||
-				
-	}
 	
 	/**
 	 * Dado 
@@ -53,22 +47,8 @@ public class Utils <E>{
 		return coleccion == null || coleccion.isEmpty();
 	}
 	
-	
-	/**
-	 * Devuelve una lista recibiendo un array del objeto
-	 * @param array
-	 * @return
-	 */
-	public List<E> adaptaALista(E array[]){
-		return Arrays.asList(array);
-	}
-	/**
-	 * Transform list to array
-	 * @param list
-	 * @return
-	 */
-	public E[] adaptaAArray(List<E> list){
-		return (E[]) list.toArray();
+	public static Character recuperaCaracter(int posicion, String palabra) {
+		return palabra.isEmpty() || posicion >= palabra.length() ? LAMBDA : palabra.charAt(posicion);
 	}
 	
 	/**
@@ -113,7 +93,6 @@ public class Utils <E>{
 			correccion = correccion.replace("%29", ")");	
 			correccion = correccion.replace("%3D", SEPARADOR_TRANSICIONES);
 
-			
 		}
 		return correccion;
 	}
@@ -125,16 +104,29 @@ public class Utils <E>{
 	 * @param transOut
 	 * @return
 	 */
-	public static Deque<Character> pilaAuxiliar(Deque<Character> pila, TransicionOut transOut) {
+	public static void adaptaPilaConTransicionSalida(Deque<Character> pila, TransicionOut transOut) {
 		
-		Deque<Character> pilaAux = new ArrayDeque<>();
-		pilaAux.addAll(pila);
-
 		for (Character c : transOut.getNuevaCabezaPila()){
 			if (c != Utils.LAMBDA){
-				pilaAux.push(c);
+				pila.push(c);
 			}
 		}
-		return pilaAux;
+	}
+	
+	/**
+	 * Devuelve una lista recibiendo un array del objeto
+	 * @param array
+	 * @return
+	 */
+	public List<E> adaptaALista(E array[]){
+		return Arrays.asList(array);
+	}
+	/**
+	 * Transform list to array
+	 * @param list
+	 * @return
+	 */
+	public E[] adaptaAArray(List<E> list){
+		return (E[]) list.toArray();
 	}
 }

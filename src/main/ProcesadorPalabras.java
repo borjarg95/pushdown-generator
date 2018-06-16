@@ -17,7 +17,7 @@ import excepciones.AlfabetoNoValidoException;
 
 @Service
 public class ProcesadorPalabras {
-	static Logger log = Logger.getLogger(ProcesadorPalabras.class.getName());
+	private static Logger log = Logger.getLogger(ProcesadorPalabras.class.getName());
 	public ProcesadorPalabras(){}
 	
 	/**
@@ -73,29 +73,22 @@ public class ProcesadorPalabras {
 	private boolean compruebaBT(String estadoActual, int posicionCadena, String palabraEntrada, Deque<Character> pila,AutomataPila automata) {
 //		registrarEntradaBackTraking(estadoActual, posicionCadena, palabraEntrada, pila);
 		if (pila.isEmpty()) {
-			return (palabraEntrada.length() == posicionCadena);
+			return Utils.esSolucion(pila, posicionCadena, palabraEntrada);
 		}
-		Character caracterEntrada = null;
+		Character caracterEntrada = Utils.recuperaCaracter(posicionCadena, palabraEntrada);
 		if (posicionCadena > 0 && posicionCadena >= palabraEntrada.length()) {
-			TransicionIn tranEntrada = new TransicionIn(estadoActual, Utils.LAMBDA, pila.peek());
+			TransicionIn tranEntrada = new TransicionIn(estadoActual, caracterEntrada, pila.peek());
 			if (automata.getFuncionesTransicion().get(tranEntrada) == null) {
 				return false;
 			}
-			caracterEntrada = Utils.LAMBDA;
-		} else {		
-			caracterEntrada = palabraEntrada.isEmpty() ? Utils.LAMBDA : palabraEntrada.charAt(posicionCadena);
 		}
 		
-		//Recuperamos las posibles transiciones en el estado actual
-		Character cabezaConsumida = pila.pop();
 		//Guardamos la pila actual, de modo que cuando se haga backtracking todo esta guardado correctamente
-		Deque<Character> pilaAnterior = new ArrayDeque<>();
-		pila.push(cabezaConsumida);
-		pilaAnterior.addAll(pila);
-		pila.pop();
+		Deque<Character> pilaAnterior = new ArrayDeque<>(pila);
 		String estadoAnterior = estadoActual;	
 		
-		TransicionIn tranEntrada = new TransicionIn(estadoActual, caracterEntrada, cabezaConsumida);
+		//Recuperamos las posibles transiciones en el estado actual
+		TransicionIn tranEntrada = new TransicionIn(estadoActual, caracterEntrada, pila.pop());
 		TransicionIn tranLambda = null;
 		List<TransicionOut> transicionesSalida = null;
 		
@@ -125,7 +118,8 @@ public class ProcesadorPalabras {
 		if (Utils.esCollecionVaciaONull(transicionesSalida)) {
 			return false;
 		}
-		for(int i=0; i<transicionesSalida.size() && !exito ; i++) {
+		int i = 0;
+		while (i < transicionesSalida.size() && !exito) {
 			TransicionOut transOut = transicionesSalida.get(i);
 
 			if (i!=0 && tranEntrada.getSimbEntrada()!=Utils.LAMBDA 
@@ -135,29 +129,23 @@ public class ProcesadorPalabras {
 					pila.pop();
 				}
 			}
+			Utils.adaptaPilaConTransicionSalida(pila, transOut);
+			estadoActual = transOut.getEstadoSalida();
 
-			Deque<Character> pilaAux = Utils.pilaAuxiliar(pila, transOut);
-			if (Utils.esFactible(transOut,pilaAux,palabraEntrada,posicionCadena)) {
-				pila = pilaAux;
-				estadoActual = transOut.getEstadoSalida();
-
-				if (Utils.esSolucion(tranEntrada,tranLambda, pila, posicionCadena, palabraEntrada, estadoActual, automata)) {
-					exito = true;
-					break;
+			if (Utils.esSolucion(pila, posicionCadena, palabraEntrada)) {
+				exito = true;
+			} else {
+				if (Utils.esTransicionEntradaSoloLambda(automata, tranEntrada, tranLambda)) {
+					exito = compruebaBT(estadoActual, posicionCadena, palabraEntrada, pila, automata);							
 				} else {
-					if (Utils.esTransicionEntradaSoloLambda(automata, tranEntrada, tranLambda)) {
-						exito = compruebaBT(estadoActual, posicionCadena, palabraEntrada, pila, automata);							
-					} else {
-						exito = compruebaBT(estadoActual, posicionCadena+1, palabraEntrada, pila,automata);
-					}
-					if (!exito){
-						pila = pilaAnterior;
-						estadoActual = estadoAnterior;
-					}
+					exito = compruebaBT(estadoActual, posicionCadena+1, palabraEntrada, pila,automata);
 				}
-			} else{
-				pila = pilaAnterior;
+				if (!exito){
+					pila = pilaAnterior;
+					estadoActual = estadoAnterior;
+				} 
 			}
+			i++;
 		}
 		return exito;
 	}
