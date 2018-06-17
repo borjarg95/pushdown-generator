@@ -26,3 +26,11 @@ i.ejemplo{
 b.ejemploPlantilla{
 	color:red !important;
 }
+
+b.palabraAceptada{
+	color:green !important;
+}
+
+b.palabraRechazada{
+	color:red !important;
+}

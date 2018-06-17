@@ -22,6 +22,7 @@ function generarDefinicionLarga() {
 		    }
 		});
 }	
+
 /**
  * 
  * 
@@ -85,9 +86,9 @@ function compruebaPalabra(){
 function procesa_respuesta(data, palabra){
 	if (palabra=="+") palabra = "vacia"
 	if (data){
-		$("#resultados").append("<li>La palabra <b>"+ palabra + "</b> está aceptada.");
+		$("#resultados").append("<li>La palabra <b class=\"palabraAceptada\">"+ palabra + "</b> está aceptada.");
 	} else {
-		$("#resultados").append("<li>La palabra <b>"+ palabra + "</b> no está aceptada.");
+		$("#resultados").append("<li>La palabra <b class=\"palabraRechazada\">"+ palabra + "</b> no está aceptada.");
 
 	}
 }

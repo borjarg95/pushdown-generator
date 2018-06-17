@@ -20,6 +20,7 @@ public class Utils <E>{
 	public static final Character LAMBDA = '@';
 	public static final String SALTO_LINEA = "\n";
 	public static final int TAMANIO_MAPA_AUTOMATAS_GENERADOS = 350;
+	public static final int ALTURA_MAXIMA_ARBOL_BACKTRAKING = 500;
 
 	public static boolean esSolucion(Deque<Character> pila, int posPalabra, String palabraEntrada){
 
@@ -41,8 +42,19 @@ public class Utils <E>{
 				|| tranEntrada.equals(tranLambda);
 	}
 	
+	public static boolean esTransicionLambda(AutomataPila automata, TransicionIn tranEntrada, TransicionIn tranLambda, TransicionOut tranSalida) {
+		List<TransicionOut> transicionesLambdaAux = automata.getFuncionesTransicion().get(new TransicionIn(tranEntrada.getEstado(), LAMBDA, tranEntrada.getSimbCabezaPila()));
+		return (tranLambda != null && (automata.getFuncionesTransicion().get(tranEntrada) == null) 
+				|| ((tranLambda == null) && tranEntrada.getSimbEntrada() == Utils.LAMBDA))
+				|| tranEntrada.equals(tranLambda)
+				|| (!esCollecionVaciaONull(transicionesLambdaAux) && transicionesLambdaAux.contains(tranSalida));
+	}
+	
+	
 	public static <E> boolean esCollecionVaciaONull(Collection<E> coleccion){
-		return coleccion == null || coleccion.isEmpty();
+		return coleccion == null 
+				|| coleccion.isEmpty() 
+				|| (coleccion.size() == 1 && coleccion.iterator().next() == null);
 	}
 	
 	public static Character recuperaCaracter(int posicion, String palabra) {

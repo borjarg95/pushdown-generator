@@ -135,7 +135,10 @@ public class PushdownGeneratorApplicationTests {
 		assertTrue(procesador.compruebaPalabraBT("", automata));		
 		assertTrue(procesador.compruebaPalabraBT("ba", automata));
 		assertTrue(procesador.compruebaPalabraBT("bbab", automata));
+		assertFalse(procesador.compruebaPalabraBT("bba", automata));
 		assertTrue(procesador.compruebaPalabraBT("bbaa", automata));
+		assertFalse(procesador.compruebaPalabraBT("bbaabb", automata));
+
 		assertTrue(procesador.compruebaPalabraBT("bbbaab", automata));
 		assertTrue(procesador.compruebaPalabraBT("bbbbbb", automata));
 		assertFalse(procesador.compruebaPalabraBT("a", automata));

@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.pushdown.automaton.exceptions.AlfabetoNoValidoException;
+import com.pushdown.automaton.exceptions.NodosInfinitosException;
 import com.pushdown.automaton.model.AutomataPila;
 import com.pushdown.automaton.model.TransicionIn;
 import com.pushdown.automaton.model.TransicionOut;
@@ -31,7 +32,7 @@ public class ProcesadorPalabras {
 	public boolean compruebaPalabraBT(String palabraEntrada, AutomataPila automata) throws AlfabetoNoValidoException{
 		boolean pertenece = true; 
 		int i = 0;
-		char letraRechazada = 0;
+		char letraRechazada =' ';
 		palabraEntrada = palabraEntrada.trim(); //suprimimos los espacios en blanco en caso de que los haya
 		
 		//1� Comprobamos que los caracteres de entrada pertenecen al alfabeto
@@ -53,7 +54,12 @@ public class ProcesadorPalabras {
 		pila.push(automata.getInicialPila());
 		String estadoActual = automata.getEstadoInicial();			
 		//posicion inicial = 0
-		boolean resultado = compruebaBT(estadoActual, 0, palabraEntrada, pila,automata);
+		boolean resultado;
+		try {
+			resultado = compruebaBT(estadoActual, 0, palabraEntrada, pila,automata, 0);
+		} catch (NodosInfinitosException e) {
+			resultado = false;
+		}
 		String palabra = palabraEntrada.isEmpty() ? "vacia" : palabraEntrada;
 		if (resultado){
 			log.info("La palabra: "+palabra+" esta aceptada por el automata: "+automata.getIdAutomata());
@@ -70,9 +76,13 @@ public class ProcesadorPalabras {
 	 * @param palabraEntrada
 	 * @param pila
 	 * @return
+	 * @throws NodosInfinitosException 
 	 */
-	private boolean compruebaBT(String estadoActual, int posicionCadena, String palabraEntrada, Deque<Character> pila,AutomataPila automata) {
+	private boolean compruebaBT(String estadoActual, int posicionCadena, String palabraEntrada, Deque<Character> pila,AutomataPila automata, int numLlamadasRecursivas) throws NodosInfinitosException {
 //		registrarEntradaBackTraking(estadoActual, posicionCadena, palabraEntrada, pila);
+		if (numLlamadasRecursivas > Utils.ALTURA_MAXIMA_ARBOL_BACKTRAKING) {
+			throw new NodosInfinitosException();
+		}
 		if (pila.isEmpty()) {
 			return Utils.esSolucion(pila, posicionCadena, palabraEntrada);
 		}
@@ -136,10 +146,10 @@ public class ProcesadorPalabras {
 			if (Utils.esSolucion(pila, posicionCadena, palabraEntrada)) {
 				exito = true;
 			} else {
-				if (Utils.esTransicionEntradaSoloLambda(automata, tranEntrada, tranLambda)) {
-					exito = compruebaBT(estadoActual, posicionCadena, palabraEntrada, pila, automata);							
+				if (Utils.esTransicionLambda(automata, tranEntrada, tranLambda, transOut)) {
+					exito = compruebaBT(estadoActual, posicionCadena, palabraEntrada, pila, automata, numLlamadasRecursivas++);							
 				} else {
-					exito = compruebaBT(estadoActual, posicionCadena+1, palabraEntrada, pila,automata);
+					exito = compruebaBT(estadoActual, posicionCadena+1, palabraEntrada, pila,automata, numLlamadasRecursivas++);
 				}
 				if (!exito){
 					pila = pilaAnterior;
