@@ -26,12 +26,8 @@ public class GeneradorAutomataPila {
 	
 	private BufferedReader bufferReader;
 
-	public GeneradorAutomataPila(){
-		//constructor 
-	}
-
 	/**
-	 * Se leer� de un fichero de entrada la definicion de un automata a pila, de tal manera que:
+	 * Se lee de un fichero de entrada la definicion de un automata a pila, de tal manera que:
 	 * 		En la primera linea se definiran:
 	 * 			-Alfabeto lenguaje
 	 * 			-Simbolos automata
@@ -41,7 +37,7 @@ public class GeneradorAutomataPila {
 	 *	Todos ellos, se encuentran separados mediante ";" de este modo se simplifica su procesado.
 	 * @throws AlfabetoNoValidoException 
 	 **/
-	public AutomataPila generaAutomataRuta(String ruta) throws IOException, com.pushdown.automaton.exceptions.AlfabetoNoValidoException, DatosEntradaErroneosException{
+	public AutomataPila generaAutomataRuta(String ruta) throws IOException, AlfabetoNoValidoException, DatosEntradaErroneosException{
 		if ((ruta == null) || ruta.isEmpty()){
 			throw new FileNotFoundException("La ruta no está informada");
 		}
@@ -245,7 +241,8 @@ public class GeneradorAutomataPila {
 		return tranSalida;
 	}
 	
-	/** 		En la primera linea se definiran:
+	/** 
+	 * En la primera linea se definiran:
 	 * 			-Alfabeto lenguaje
 	 * 			-Simbolos automata
 	 * 			-Conjunto de estados

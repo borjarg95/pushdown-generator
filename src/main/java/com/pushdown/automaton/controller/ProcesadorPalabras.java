@@ -20,7 +20,7 @@ import com.pushdown.automaton.utils.Utils;
 
 @Service
 public class ProcesadorPalabras {
-	private static Logger log = LogManager.getLogger(ProcesadorPalabras.class.getName());
+	private static Logger logger = LogManager.getLogger(ProcesadorPalabras.class.getName());
 	
 	/**
 	 * Metodo que permite verificar si una palabra pertenece al lenguaje del aut�mata.
@@ -58,14 +58,14 @@ public class ProcesadorPalabras {
 		try {
 			resultado = compruebaBT(estadoActual, 0, palabraEntrada, pila,automata, 0);
 		} catch (NodosInfinitosException e) {
-			log.info("La palabra: "+ palabraEntrada + " esta generando un bucle infinito: "+automata.toString());
+			logger.info("La palabra: "+ palabraEntrada + " esta generando un bucle infinito: "+automata.toString());
 			resultado = false;
 		}
 		String palabra = palabraEntrada.isEmpty() ? "vacia" : palabraEntrada;
 		if (resultado){
-			log.info("La palabra: "+palabra+" esta aceptada por el automata: "+automata.getIdAutomata());
+			logger.info("La palabra: "+palabra+" esta aceptada por el automata: "+automata.getIdAutomata());
 		} else {
-			log.info("La palabra: "+palabra+" NO esta aceptada por el automata: "+automata.getIdAutomata());
+			logger.info("La palabra: "+palabra+" NO esta aceptada por el automata: "+automata.getIdAutomata());
 		}
 		return resultado;
 	}
@@ -161,15 +161,15 @@ public class ProcesadorPalabras {
 		return exito;
 	}
 
-	private void registrarEntradaBackTraking(String estadoActual, int posicionCadena, String palabraEntrada, Deque<Character> pila) {
-		Iterator<Character> pilaTraza = pila.descendingIterator();
-		StringBuilder sb = new StringBuilder("[");
-		while (pilaTraza.hasNext())
-			sb.append(pilaTraza.next()+",");
-		sb.append("]");
-		log.info("Estado actual:"+estadoActual + 
-				" posicionPalabra: "+posicionCadena+
-				", palabraEntrada: "+palabraEntrada+
-				" PILA: " + sb.toString());
-	}
+//	private void registrarEntradaBackTraking(String estadoActual, int posicionCadena, String palabraEntrada, Deque<Character> pila) {
+//		Iterator<Character> pilaTraza = pila.descendingIterator();
+//		StringBuilder sb = new StringBuilder("[");
+//		while (pilaTraza.hasNext())
+//			sb.append(pilaTraza.next()+",");
+//		sb.append("]");
+//		logger.info("Estado actual:"+estadoActual + 
+//				" posicionPalabra: "+posicionCadena+
+//				", palabraEntrada: "+palabraEntrada+
+//				" PILA: " + sb.toString());
+//	}
 }
