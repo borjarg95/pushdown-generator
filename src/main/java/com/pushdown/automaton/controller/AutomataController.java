@@ -1,8 +1,6 @@
 package com.pushdown.automaton.controller;
 
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -19,8 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pushdown.automaton.exceptions.AlfabetoNoValidoException;
 import com.pushdown.automaton.model.AutomataPila;
-import com.pushdown.automaton.services.GeneradorAutomataPila;
-import com.pushdown.automaton.services.ProcesadorPalabras;
 import com.pushdown.automaton.utils.Utils;
 
 @RestController
@@ -28,7 +24,8 @@ public class AutomataController {
 	private static final Logger logger = LogManager.getLogger(AutomataController.class.getName());
 	private Map<Integer, AutomataPila> automatasGenerados = new HashMap<>();
 
-	public AutomataController() {
+	public AutomataController() { 
+		//constructor vacio
 	}
 
 	@Autowired
@@ -40,7 +37,8 @@ public class AutomataController {
 	private GeneradorAutomataPila generadorAutomataPila;
  
 	@RequestMapping(value = "/Generate", method = RequestMethod.POST)
-	public ResponseEntity<?> generaAutomata(@RequestBody String entrada) throws IOException {
+	public ResponseEntity<?> generaAutomata(@RequestBody String entrada) {
+		
 		String entradaConsulta = Utils.correctorCharEspeciales(entrada);
 		try {
 			if (automatasGenerados.size() > Utils.TAMANIO_MAPA_AUTOMATAS_GENERADOS)
@@ -56,15 +54,9 @@ public class AutomataController {
 		}
 	}
 
-	@RequestMapping(value = "/AdvancedGenerate", method = RequestMethod.POST)
-	public AutomataPila generaConDefinicion(@RequestBody String principales, List<String> transiciones)
-			throws IOException {
-		return new AutomataPila(principales, transiciones);
-	}
-
 	@RequestMapping(value = "/CheckWord/{index}/{palabra}", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<?> validaPalabra(@PathVariable("index") String index, @PathVariable("palabra") String palabra)
-			throws Exception {
+	public ResponseEntity<?> validaPalabra(@PathVariable("index") String index, @PathVariable("palabra") String palabra) {
+		
 		if (automatasGenerados.get(Integer.valueOf(index)) != null) {
 			try {
 				return new ResponseEntity<>(

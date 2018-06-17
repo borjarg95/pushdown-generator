@@ -1,4 +1,4 @@
-package com.pushdown.automaton.services;
+package com.pushdown.automaton.controller;
 
 
 import java.util.ArrayDeque;
@@ -58,6 +58,7 @@ public class ProcesadorPalabras {
 		try {
 			resultado = compruebaBT(estadoActual, 0, palabraEntrada, pila,automata, 0);
 		} catch (NodosInfinitosException e) {
+			log.info("La palabra: "+ palabraEntrada + " esta generando un bucle infinito: "+automata.toString());
 			resultado = false;
 		}
 		String palabra = palabraEntrada.isEmpty() ? "vacia" : palabraEntrada;
@@ -94,7 +95,7 @@ public class ProcesadorPalabras {
 			}
 		}
 		
-		//Guardamos la pila actual, de modo que cuando se haga backtracking todo esta guardado correctamente
+		//Guardamos la pila actual, de modo que cuando se haga backtracking no se pierde la informacion anterior
 		Deque<Character> pilaAnterior = new ArrayDeque<>(pila);
 		String estadoAnterior = estadoActual;	
 		
@@ -135,10 +136,9 @@ public class ProcesadorPalabras {
 
 			if (i!=0 && tranEntrada.getSimbEntrada()!=Utils.LAMBDA 
 					 && automata.getFuncionesTransicion().get(tranEntrada)!=null 
-					 && automata.getFuncionesTransicion().get(tranEntrada).contains(transOut)) {
-				if (!pila.isEmpty()) {
-					pila.pop();
-				}
+					 && automata.getFuncionesTransicion().get(tranEntrada).contains(transOut)
+					 && !pila.isEmpty()) {
+				pila.pop();
 			}
 			Utils.adaptaPilaConTransicionSalida(pila, transOut);
 			estadoActual = transOut.getEstadoSalida();

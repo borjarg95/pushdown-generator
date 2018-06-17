@@ -13,11 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.pushdown.automaton.controller.GeneradorAutomataPila;
+import com.pushdown.automaton.controller.ProcesadorPalabras;
 import com.pushdown.automaton.exceptions.AlfabetoNoValidoException;
 import com.pushdown.automaton.exceptions.DatosEntradaErroneosException;
 import com.pushdown.automaton.model.AutomataPila;
-import com.pushdown.automaton.services.GeneradorAutomataPila;
-import com.pushdown.automaton.services.ProcesadorPalabras;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

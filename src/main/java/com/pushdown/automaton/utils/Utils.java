@@ -32,20 +32,15 @@ public class Utils <E>{
 	 * @param automata
 	 * @param tranEntrada
 	 * @param tranLambda
-	 * comprueba en la situción del automata únicamente se pueda realizar la transición lambda. 
+	 * @param tranSalida
+	 * Comprueba en la situción del automata únicamente se pueda realizar la transición lambda. 
 	 * Esto implica que BT se realiza sobre la misma posición de la cadena de entrada, es decir, se itera sin leer un nuevo caracter de la palabra
 	 * @return
 	 */
-	public static boolean esTransicionEntradaSoloLambda(AutomataPila automata, TransicionIn tranEntrada, TransicionIn tranLambda) {
-		return (tranLambda !=null && (automata.getFuncionesTransicion().get(tranEntrada) == null)) 
-				|| ((tranLambda == null) && (tranEntrada.getSimbEntrada() == Utils.LAMBDA))
-				|| tranEntrada.equals(tranLambda);
-	}
-	
 	public static boolean esTransicionLambda(AutomataPila automata, TransicionIn tranEntrada, TransicionIn tranLambda, TransicionOut tranSalida) {
 		List<TransicionOut> transicionesLambdaAux = automata.getFuncionesTransicion().get(new TransicionIn(tranEntrada.getEstado(), LAMBDA, tranEntrada.getSimbCabezaPila()));
 		return (tranLambda != null && (automata.getFuncionesTransicion().get(tranEntrada) == null) 
-				|| ((tranLambda == null) && tranEntrada.getSimbEntrada() == Utils.LAMBDA))
+				|| ((tranLambda == null) && tranEntrada.getSimbEntrada() == LAMBDA))
 				|| tranEntrada.equals(tranLambda)
 				|| (!esCollecionVaciaONull(transicionesLambdaAux) && transicionesLambdaAux.contains(tranSalida));
 	}
@@ -117,7 +112,7 @@ public class Utils <E>{
 	public static void adaptaPilaConTransicionSalida(Deque<Character> pila, TransicionOut transOut) {
 		
 		for (Character c : transOut.getNuevaCabezaPila()){
-			if (c != Utils.LAMBDA){
+			if (c != LAMBDA){
 				pila.push(c);
 			}
 		}
@@ -136,6 +131,7 @@ public class Utils <E>{
 	 * @param list
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public E[] adaptaAArray(List<E> list){
 		return (E[]) list.toArray();
 	}

@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.pushdown.automaton.controller.GeneradorAutomataPila;
 import com.pushdown.automaton.exceptions.AlfabetoNoValidoException;
 import com.pushdown.automaton.exceptions.DatosEntradaErroneosException;
-import com.pushdown.automaton.services.GeneradorAutomataPila;
 
 public class AutomataPila {
 
@@ -80,10 +80,6 @@ public class AutomataPila {
 		
 	}
 	
-	public AutomataPila(String primeraLinea, List<String> transiciones) throws IOException{
-//		return generadorAutomataPila.generaAutomata(primeraLinea, transiciones);
-	}
-	
 	/**
 	 * Constructor generico
 	 */
@@ -92,7 +88,7 @@ public class AutomataPila {
 		this.alfabetoPila = new HashSet<>();
 		this.estadosPila = new HashSet<>();
 		this.inicialPila = ' ';
-		this.estadoInicial = new String();
+		this.estadoInicial = "";
 		this.funcionesTransicion = new HashMap<>();
 		this.estadosFinales = new ArrayList<>();
 	}
@@ -160,7 +156,6 @@ public class AutomataPila {
 		this.transicionesVaciado = transicionesVaciado;
 	}
 	
-	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -176,7 +171,6 @@ public class AutomataPila {
 		result = prime * result + ((transicionesVaciado == null) ? 0 : transicionesVaciado.hashCode());
 		return result;
 	}
-
 	
 	@Override
 	public boolean equals(Object obj) {
@@ -234,8 +228,14 @@ public class AutomataPila {
 
 	@Override
 	public String toString() {
-		return "AutomataPila [alfabetoLenguaje=" + alfabetoLenguaje + ", alfabetoPila=" + alfabetoPila
-				+ ", estadosPila=" + estadosPila + ", inicialPila=" + inicialPila + ", estadoInicial=" + estadoInicial
-				+ ", funcionesTransicion=" + funcionesTransicion + ", estadosFinales=" + estadosFinales + "]";
+		return "AutomataPila [id: "+ idAutomata 
+			+ ", alfabetoLenguaje=" + alfabetoLenguaje 
+			+ ", alfabetoPila=" + alfabetoPila
+			+ ", estadosPila=" + estadosPila 
+			+ ", inicialPila=" + inicialPila 
+			+ ", estadoInicial=" + estadoInicial
+			+ ", transiciones=" + funcionesTransicion 
+			+ ", estadosFinales=" + estadosFinales 
+			+ "]";
 	}
 }
