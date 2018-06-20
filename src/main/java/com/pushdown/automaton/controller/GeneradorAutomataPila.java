@@ -53,40 +53,54 @@ public class GeneradorAutomataPila {
 		String linea;
 		int line = 1; //inicializamos el valor a 1 porque ya hemos procesado la primera linea del fichero	
 		while ((linea = bufferReader.readLine())!=null){
-			line++;
-			validaFormatoLineaTransicion(linea, line);
-
-			linea = linea.substring(2, linea.length()-1);				 
-			String[] transiciones = divideLineaTransicion(linea, line);
-			
-			//Procesado de transicion
-			String[] vectorTransEntrada = recuperaVectorTransicionEntrada(line, transiciones);
-			TransicionIn tranIn = generaTransicionEntrada(vectorTransEntrada, automata, line);//contiene ")" al final
-			
-			String[] vectorTransSalida = recuperaVectorTransicionSalida(line, transiciones);
-			TransicionOut tranOut = generaTransicionSalida(vectorTransSalida,automata,line);  //contiene "(" al iniciozz
-			
-			List<TransicionOut> listaSalida = automata.getFuncionesTransicion().get(tranIn);
-			if (listaSalida == null){
-				listaSalida = new ArrayList<>();
-				listaSalida.add(tranOut);
-			}else {
-				if (!listaSalida.contains(tranOut)){
-					listaSalida.add(tranOut);
-				} else {
-					throw new DatosEntradaErroneosException("No puedes introducir transiciones repetidas. Linea: "+line);
-				}
-			}
-			automata.getFuncionesTransicion().put(tranIn, listaSalida);
-			
-			if (tranOut.getNuevaCabezaPila().size()==1 && (tranOut.getNuevaCabezaPila().get(0) == Utils.LAMBDA)){
-				if (automata.getTransicionesVaciado() == null)					
-					automata.setTransicionesVaciado(new ArrayList<TransicionIn>());						
-				automata.getTransicionesVaciado().add(tranIn);
-			}
+			incluirTransicionEnAutomata(automata, linea, line);
 		}	
 		bufferReader.close();
 		return automata;
+	}
+
+	/**
+	 * @param automata
+	 * @param linea
+	 * @param line
+	 * @return
+	 * @throws DatosEntradaErroneosException
+	 * @throws AlfabetoNoValidoException
+	 */
+	private int incluirTransicionEnAutomata(AutomataPila automata, String linea, int line)
+			throws DatosEntradaErroneosException, AlfabetoNoValidoException {
+		line++;
+		validaFormatoLineaTransicion(linea, line);
+
+		linea = linea.substring(2, linea.length()-1);				 
+		String[] transiciones = divideLineaTransicion(linea, line);
+		
+		//Procesado de transicion
+		String[] vectorTransEntrada = recuperaVectorTransicionEntrada(line, transiciones);
+		TransicionIn tranIn = generaTransicionEntrada(vectorTransEntrada, automata, line);//contiene ")" al final
+		
+		String[] vectorTransSalida = recuperaVectorTransicionSalida(line, transiciones);
+		TransicionOut tranOut = generaTransicionSalida(vectorTransSalida,automata,line);  //contiene "(" al iniciozz
+		
+		List<TransicionOut> listaSalida = automata.getFuncionesTransicion().get(tranIn);
+		if (listaSalida == null){
+			listaSalida = new ArrayList<>();
+			listaSalida.add(tranOut);
+		}else {
+			if (!listaSalida.contains(tranOut)){
+				listaSalida.add(tranOut);
+			} else {
+				throw new DatosEntradaErroneosException("No puedes introducir transiciones repetidas. Linea: "+line);
+			}
+		}
+		automata.getFuncionesTransicion().put(tranIn, listaSalida);
+		
+		if (tranOut.getNuevaCabezaPila().size()==1 && (tranOut.getNuevaCabezaPila().get(0) == Utils.LAMBDA)){
+			if (automata.getTransicionesVaciado() == null)					
+				automata.setTransicionesVaciado(new ArrayList<TransicionIn>());						
+			automata.getTransicionesVaciado().add(tranIn);
+		}
+		return line;
 	}
 
 	public AutomataPila generaAutomata(String definicion) throws IOException, AlfabetoNoValidoException, DatosEntradaErroneosException{
@@ -103,34 +117,7 @@ public class GeneradorAutomataPila {
 		int line = 1; //Inicializamos el valor a 1 porque ya hemos procesado la primera linea del fichero	
 		while (line < entrada.length){
 			linea = entrada[line];
-			line++;
-			validaFormatoLineaTransicion(linea, line);
-
-			linea = linea.substring(2, linea.length()-1);				 
-			String[] transiciones = divideLineaTransicion(linea, line);
-			String[] vectorTransEntrada = recuperaVectorTransicionEntrada(line, transiciones);
-			TransicionIn tranIn = generaTransicionEntrada(vectorTransEntrada, automata, line);//contiene ")" al final
-			String[] vectorTransSalida = recuperaVectorTransicionSalida(line, transiciones);
-			TransicionOut tranOut = generaTransicionSalida(vectorTransSalida,automata,line);  //contiene "(" al iniciozz
-			
-			List<TransicionOut> listaSalida = automata.getFuncionesTransicion().get(tranIn);
-			if (listaSalida == null){
-				listaSalida = new ArrayList<>();
-				listaSalida.add(tranOut);
-			}else {
-				if (!listaSalida.contains(tranOut)){
-					listaSalida.add(tranOut);
-				} else {
-					throw new DatosEntradaErroneosException("No puedes introducir transiciones repetidas. Linea: "+line);
-				}
-			}
-			automata.getFuncionesTransicion().put(tranIn, listaSalida);
-			
-			if (tranOut.getNuevaCabezaPila().size()==1 && (tranOut.getNuevaCabezaPila().get(0) == Utils.LAMBDA)){
-				if (automata.getTransicionesVaciado() == null)					
-					automata.setTransicionesVaciado(new ArrayList<TransicionIn>());						
-				automata.getTransicionesVaciado().add(tranIn);
-			}
+			line = incluirTransicionEnAutomata(automata, linea, line);
 		}	
 		return automata;
 	}

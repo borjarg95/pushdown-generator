@@ -35,52 +35,6 @@ public class PushdownGeneratorApplicationTests {
 	String rutaDiciembre2014 = 	 "src/test/resources/automatasTestFicheros/diciembre2014.txt";
 	
 	/**
-	 * Fichero mal introducido
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 * @throws AlfabetoNoValidoException 
-	 * @throws DatosEntradaErroneosException 
-	 */
-	@Test (expected = DatosEntradaErroneosException.class)	
-	public void testGeneraAutomataFicheroErroneo() throws FileNotFoundException, IOException, AlfabetoNoValidoException, DatosEntradaErroneosException {
-		AutomataPila automata = aut.generaAutomata("mal escrito.txt");
-		assertNotNull(automata);
-	}
-
-	/**
-	 * Primera linea mal formada -- simbolo fichero con multiples caracteres
-	 * @throws DatosEntradaErroneosException 
-	 */
-	@Test (expected = DatosEntradaErroneosException.class)	
-	public void testEntradaPrimeraLineaMalFormada() throws FileNotFoundException, IOException, AlfabetoNoValidoException, DatosEntradaErroneosException {
-		String definicion = "{a,b};{SD,A,B};{p,q,r};p;S;\n";
-		AutomataPila automata = new AutomataPila(definicion, aut);
-		assertNotNull(automata);
-	}
-	
-	/**
-	 * Primera linea mal formada
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 * @throws AlfabetoNoValidoException 
-	 * @throws DatosEntradaErroneosException 
-	 */
-	@Test (expected = DatosEntradaErroneosException.class)	
-	public void testTransicionFila1MalFormada() throws FileNotFoundException, IOException, AlfabetoNoValidoException, DatosEntradaErroneosException {
-		String definicion = "{a,b};{SD,A,B};{p,q,r};p;S;\n"
-					+	"f(a,b,c--)";
-		AutomataPila automata = new AutomataPila(definicion, aut);
-		assertNotNull(automata);
-	}
-	
-	@Test
-	public void testConstructorVacioAutomata(){
-		AutomataPila aut = new AutomataPila();
-		assertTrue(aut.getInicialPila() == ' ');
-		assertTrue(aut.getEstadoInicial().isEmpty());
-	}
-	
-	/**
 	 * El lenguaje aceptado es:
 	 * L = {y(ba)^m | y -> {c,d}*, y m= nº c's en y, m>=0
 	 * Debe aceptar (ej):
@@ -186,7 +140,32 @@ public class PushdownGeneratorApplicationTests {
 	}
 	
 	@Test
-	public void testAutomataString() throws Exception{
+	public void testAutomataStringPorGenerador() throws Exception{
+		String automataDiciembre = 
+				"{a,b};{S,A,B};{p,q,r};p;S;\n"+
+				"f(p,b,S)=(p,BS)\n"+
+				"f(p,b,B)=(p,BB)\n"+
+				"f(p, ,S)=(p, )\n"+
+				"f(p,b,B)=(r, )\n"+
+				"f(p,a,B)=(q, )\n"+
+				"f(q,a,B)=(q, )\n"+
+				"f(q, ,S)=(q, )\n"+
+				"f(q,b,B)=(r, )\n"+
+				"f(r,b,B)=(r, )\n"+
+				"f(r, ,S)=(r, )\n";
+		AutomataPila automata = aut.generaAutomata(automataDiciembre);
+		assertTrue(procesador.compruebaPalabraBT("", automata));		
+		assertTrue(procesador.compruebaPalabraBT("ba", automata));
+		assertTrue(procesador.compruebaPalabraBT("bbab", automata));
+		assertTrue(procesador.compruebaPalabraBT("bbaa", automata));
+		assertTrue(procesador.compruebaPalabraBT("bbbaab", automata));
+		assertTrue(procesador.compruebaPalabraBT("bbbbbb", automata));
+		assertFalse(procesador.compruebaPalabraBT("a", automata));
+		assertFalse(procesador.compruebaPalabraBT("aa", automata));
+	}
+	
+	@Test
+	public void testAutomataStringPorConstructor() throws Exception{
 		String automataDiciembre = 
 				"{a,b};{S,A,B};{p,q,r};p;S;\n"+
 				"f(p,b,S)=(p,BS)\n"+
