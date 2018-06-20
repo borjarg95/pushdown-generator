@@ -38,7 +38,7 @@ public class GeneradorAutomataPila {
 	 * @throws AlfabetoNoValidoException 
 	 **/
 	public AutomataPila generaAutomataRuta(String ruta) throws IOException, AlfabetoNoValidoException, DatosEntradaErroneosException{
-		if ((ruta == null) || ruta.isEmpty()){
+		if (GenericValidator.isBlankOrNull(ruta)){
 			throw new FileNotFoundException("La ruta no está informada");
 		}
 		
@@ -54,56 +54,41 @@ public class GeneradorAutomataPila {
 		int line = 1; //inicializamos el valor a 1 porque ya hemos procesado la primera linea del fichero	
 		while ((linea = bufferReader.readLine())!=null){
 			line++;
-			if (linea.startsWith(Utils.INICIO_CAMPO) && (linea.endsWith(Utils.FIN_CAMPO))){ //Es la ultima linea --> Conjunto estados finales			
-				automata.setEstadosFinales(new ArrayList<String>());
-				break;
-			}
-			//control de excepciones por fallos en la entrada de texto
-			if (!(linea.startsWith("f(") && (linea.endsWith(")")))){	
-				throw new DatosEntradaErroneosException(CodigosError.TRANSICION_DE_LA_LINEA.getValue()+line+CodigosError.MAL_FORMADA.getValue());
-			} else { //transiciones del automata
-				linea = linea.substring(2, linea.length()-1);				 
-				String[] transiciones = linea.split(Utils.SEPARADOR_TRANSICIONES); //genera un vector de dos posiciones 0 --> transicionEntrada | 1 --> transicionSalida
-				if (transiciones.length != 2 || (!transiciones[0].endsWith(")") || !transiciones[1].startsWith("("))){
-					throw new DatosEntradaErroneosException(CodigosError.TRANSICION_DE_LA_LINEA.getValue()+line+CodigosError.MAL_FORMADA.getValue());
-				}
-				String[] vectorTransEntrada = transiciones[0].split(Utils.SEPARADOR_ELEMENTOS_CAMPO);
-				if (vectorTransEntrada == null || vectorTransEntrada.length != 3){
-					throw new DatosEntradaErroneosException(CodigosError.TRANSICION_DE_LA_LINEA.getValue()+line+CodigosError.MAL_FORMADA.getValue());
-				}
-				String[] vectorTransSalida = transiciones[1].split(Utils.SEPARADOR_ELEMENTOS_CAMPO);
-				if (vectorTransSalida == null || vectorTransSalida.length != 2){
-					throw new DatosEntradaErroneosException(CodigosError.TRANSICION_DE_LA_LINEA.getValue()+line+CodigosError.MAL_FORMADA.getValue());
-				}
-				
-				//Procesado de transici�n
-				TransicionIn tranIn = generaTransicionEntrada(vectorTransEntrada, automata, line);//contiene ")" al final
-				TransicionOut tranOut = generaTransicionSalida(vectorTransSalida,automata,line);  //contiene "(" al iniciozz
-				
-				List<TransicionOut> listaSalida = automata.getFuncionesTransicion().get(tranIn);
-				if (listaSalida == null){
-					listaSalida = new ArrayList<>();
+			validaFormatoLineaTransicion(linea, line);
+
+			linea = linea.substring(2, linea.length()-1);				 
+			String[] transiciones = divideLineaTransicion(linea, line);
+			
+			//Procesado de transicion
+			String[] vectorTransEntrada = recuperaVectorTransicionEntrada(line, transiciones);
+			TransicionIn tranIn = generaTransicionEntrada(vectorTransEntrada, automata, line);//contiene ")" al final
+			
+			String[] vectorTransSalida = recuperaVectorTransicionSalida(line, transiciones);
+			TransicionOut tranOut = generaTransicionSalida(vectorTransSalida,automata,line);  //contiene "(" al iniciozz
+			
+			List<TransicionOut> listaSalida = automata.getFuncionesTransicion().get(tranIn);
+			if (listaSalida == null){
+				listaSalida = new ArrayList<>();
+				listaSalida.add(tranOut);
+			}else {
+				if (!listaSalida.contains(tranOut)){
 					listaSalida.add(tranOut);
-				}else {
-					if (!listaSalida.contains(tranOut)){
-						listaSalida.add(tranOut);
-					} else {
-						throw new IOException("No puedes introducir transiciones repetidas. Linea: "+line);
-					}
+				} else {
+					throw new DatosEntradaErroneosException("No puedes introducir transiciones repetidas. Linea: "+line);
 				}
-				automata.getFuncionesTransicion().put(tranIn, listaSalida);
-				
-				if (tranOut.getNuevaCabezaPila().size()==1 && (tranOut.getNuevaCabezaPila().get(0) == Utils.LAMBDA)){
-					if (automata.getTransicionesVaciado() == null)					
-						automata.setTransicionesVaciado(new ArrayList<TransicionIn>());						
-					automata.getTransicionesVaciado().add(tranIn);
-				}
+			}
+			automata.getFuncionesTransicion().put(tranIn, listaSalida);
+			
+			if (tranOut.getNuevaCabezaPila().size()==1 && (tranOut.getNuevaCabezaPila().get(0) == Utils.LAMBDA)){
+				if (automata.getTransicionesVaciado() == null)					
+					automata.setTransicionesVaciado(new ArrayList<TransicionIn>());						
+				automata.getTransicionesVaciado().add(tranIn);
 			}
 		}	
 		bufferReader.close();
 		return automata;
 	}
-	
+
 	public AutomataPila generaAutomata(String definicion) throws IOException, AlfabetoNoValidoException, DatosEntradaErroneosException{
 		if (GenericValidator.isBlankOrNull(definicion)){
 			throw new IOException("Error en la creacion del automata");
@@ -119,50 +104,32 @@ public class GeneradorAutomataPila {
 		while (line < entrada.length){
 			linea = entrada[line];
 			line++;
-			if (linea.startsWith(Utils.INICIO_CAMPO) && (linea.endsWith(Utils.FIN_CAMPO))){ //Es la ultima linea --> Conjunto estados finales			
-				automata.setEstadosFinales(new ArrayList<String>());
-				break;
-			}
-			//control de excepciones por fallos en la entrada de texto
-			if (!(linea.startsWith("f(") && (linea.endsWith(")")))){	
-				throw new IOException(CodigosError.TRANSICION_DE_LA_LINEA.getValue()+line+CodigosError.MAL_FORMADA.getValue());
-			} else { //transiciones del automata
-				linea = linea.substring(2, linea.length()-1);				 
-				String []transiciones = linea.split(Utils.SEPARADOR_TRANSICIONES); //genera un vector de dos posiciones 0 --> transicionEntrada | 1 --> transicionSalida
-				if (transiciones.length != 2 || (!transiciones[0].endsWith(")") || !transiciones[1].startsWith("("))){
-					throw new IOException(CodigosError.TRANSICION_DE_LA_LINEA.getValue()+line+CodigosError.MAL_FORMADA.getValue());
-				}
-				String []vectorTransEntrada = transiciones[0].split(Utils.SEPARADOR_ELEMENTOS_CAMPO);
-				if (vectorTransEntrada == null || vectorTransEntrada.length != 3){
-					throw new IOException(CodigosError.TRANSICION_DE_LA_LINEA.getValue()+line+CodigosError.MAL_FORMADA.getValue());
-				}
-				String []vectorTransSalida = transiciones[1].split(Utils.SEPARADOR_ELEMENTOS_CAMPO);
-				if (vectorTransSalida == null || vectorTransSalida.length != 2){
-					throw new IOException(CodigosError.TRANSICION_DE_LA_LINEA.getValue()+line+CodigosError.MAL_FORMADA.getValue());
-				}
-				
-				//Procesado de transici�n
-				TransicionIn tranIn = generaTransicionEntrada(vectorTransEntrada, automata, line);//contiene ")" al final
-				TransicionOut tranOut = generaTransicionSalida(vectorTransSalida,automata,line);  //contiene "(" al iniciozz
-				
-				List<TransicionOut> listaSalida = automata.getFuncionesTransicion().get(tranIn);
-				if (listaSalida == null){
-					listaSalida = new ArrayList<>();
+			validaFormatoLineaTransicion(linea, line);
+
+			linea = linea.substring(2, linea.length()-1);				 
+			String[] transiciones = divideLineaTransicion(linea, line);
+			String[] vectorTransEntrada = recuperaVectorTransicionEntrada(line, transiciones);
+			TransicionIn tranIn = generaTransicionEntrada(vectorTransEntrada, automata, line);//contiene ")" al final
+			String[] vectorTransSalida = recuperaVectorTransicionSalida(line, transiciones);
+			TransicionOut tranOut = generaTransicionSalida(vectorTransSalida,automata,line);  //contiene "(" al iniciozz
+			
+			List<TransicionOut> listaSalida = automata.getFuncionesTransicion().get(tranIn);
+			if (listaSalida == null){
+				listaSalida = new ArrayList<>();
+				listaSalida.add(tranOut);
+			}else {
+				if (!listaSalida.contains(tranOut)){
 					listaSalida.add(tranOut);
-				}else {
-					if (!listaSalida.contains(tranOut)){
-						listaSalida.add(tranOut);
-					} else {
-						throw new IOException("No puedes introducir transiciones repetidas. Linea: "+line);
-					}
+				} else {
+					throw new DatosEntradaErroneosException("No puedes introducir transiciones repetidas. Linea: "+line);
 				}
-				automata.getFuncionesTransicion().put(tranIn, listaSalida);
-				
-				if (tranOut.getNuevaCabezaPila().size()==1 && (tranOut.getNuevaCabezaPila().get(0) == Utils.LAMBDA)){
-					if (automata.getTransicionesVaciado() == null)					
-						automata.setTransicionesVaciado(new ArrayList<TransicionIn>());						
-					automata.getTransicionesVaciado().add(tranIn);
-				}
+			}
+			automata.getFuncionesTransicion().put(tranIn, listaSalida);
+			
+			if (tranOut.getNuevaCabezaPila().size()==1 && (tranOut.getNuevaCabezaPila().get(0) == Utils.LAMBDA)){
+				if (automata.getTransicionesVaciado() == null)					
+					automata.setTransicionesVaciado(new ArrayList<TransicionIn>());						
+				automata.getTransicionesVaciado().add(tranIn);
 			}
 		}	
 		return automata;
@@ -254,9 +221,7 @@ public class GeneradorAutomataPila {
 	private void procesaPrimeraLinea(AutomataPila automata, String[] primeraLinea) throws AlfabetoNoValidoException, 
 			DatosEntradaErroneosException{
 		
-		if (primeraLinea.length != Utils.ARGUMENTOS_LINEA0) {
-			throw new DatosEntradaErroneosException("La primera linea no está bien formada. Consulta la guia de mensajes de entrada");
-		}
+		validaTamanioPrimeraLinea(primeraLinea);
 		String alfabetoLenguaje = primeraLinea[0];
 		String simbAutomata = primeraLinea[1];	
 		String estados = primeraLinea[2];
@@ -314,6 +279,74 @@ public class GeneradorAutomataPila {
 		}
 	}
 
+	/**
+	 * El tamaño de la linea principal deben ser 5 secciones
+	 * @param primeraLinea
+	 * @throws DatosEntradaErroneosException
+	 */
+	private void validaTamanioPrimeraLinea(String[] primeraLinea) throws DatosEntradaErroneosException {
+		if (primeraLinea.length != Utils.ARGUMENTOS_LINEA0) {
+			throw new DatosEntradaErroneosException("La primera linea no está bien formada. Consulta la guia de mensajes de entrada");
+		}
+	}
+	
+	/**
+	 * Dada una linea de fichero o de cadena de entrada, comprueba que los extremos de la transicion esta formado correctamente
+	 * @param linea
+	 * @param line
+	 * @throws DatosEntradaErroneosException
+	 */
+	private void validaFormatoLineaTransicion(String linea, int line) throws DatosEntradaErroneosException {
+		if (!linea.startsWith("f(") || (!linea.endsWith(")"))) {	
+			throw new DatosEntradaErroneosException(CodigosError.TRANSICION_DE_LA_LINEA.getValue()+line+CodigosError.MAL_FORMADA.getValue());
+		}
+	}
+	
+	/**
+	 * Metodo que dada una linea procesada, la divide separando lat ransicoin de entrada y la transición de salida.
+	 * @param linea
+	 * @param line
+	 * @return
+	 * @throws DatosEntradaErroneosException
+	 */
+	private String[] divideLineaTransicion(String linea, int line) throws DatosEntradaErroneosException {
+		String[] transiciones = linea.split(Utils.SEPARADOR_TRANSICIONES); //genera un vector de dos posiciones 0 --> transicionEntrada | 1 --> transicionSalida
+		if (transiciones.length != 2 || (!transiciones[0].endsWith(")") || !transiciones[1].startsWith("("))){
+			throw new DatosEntradaErroneosException(CodigosError.TRANSICION_DE_LA_LINEA.getValue()+line+CodigosError.MAL_FORMADA.getValue());
+		}
+		return transiciones;
+	}
+	
+	/**
+	 * @param line
+	 * @param transiciones
+	 * @return
+	 * @throws DatosEntradaErroneosException
+	 */
+	private String[] recuperaVectorTransicionSalida(int line, String[] transiciones)
+			throws DatosEntradaErroneosException {
+		String[] vectorTransSalida = transiciones[1].split(Utils.SEPARADOR_ELEMENTOS_CAMPO);
+		if (vectorTransSalida.length != 2){
+			throw new DatosEntradaErroneosException(CodigosError.TRANSICION_DE_LA_LINEA.getValue()+line+CodigosError.MAL_FORMADA.getValue());
+		}
+		return vectorTransSalida;
+	}	
+
+	/**
+	 * @param line
+	 * @param transiciones
+	 * @return
+	 * @throws DatosEntradaErroneosException
+	 */
+	private String[] recuperaVectorTransicionEntrada(int line, String[] transiciones)
+			throws DatosEntradaErroneosException {
+		String[] vectorTransEntrada = transiciones[0].split(Utils.SEPARADOR_ELEMENTOS_CAMPO);
+		if (vectorTransEntrada.length != 3){
+			throw new DatosEntradaErroneosException(CodigosError.TRANSICION_DE_LA_LINEA.getValue()+line+CodigosError.MAL_FORMADA.getValue());
+		}
+		return vectorTransEntrada;
+	}	
+	
 	private void validaDatosPrimeraLinea(String alfabetoLenguaje, String simbAutomata, String estados)
 			throws AlfabetoNoValidoException, DatosEntradaErroneosException {
 		if (alfabetoLenguaje.length()<=2){

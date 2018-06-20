@@ -28,13 +28,11 @@ public class PushdownGeneratorApplicationTests {
 	@Autowired
 	ProcesadorPalabras procesador;
 	
-//	@Test
-//	public void contextLoads() {
-//	}
-	String rutaDiciembre2016 = "src/main/resources/automatasTestFicheros/diciembre2016.txt";
-	String rutaNoDeter1 = "src/main/resources/automatasTestFicheros/noDeterminista1.txt";
-	String rutaDiciembre2016C = "src/main/resources/automatasTestFicheros/diciembre2016C.txt";
-	String rutaDiciembre2014 = "src/main/resources/automatasTestFicheros/diciembre2014.txt";
+	String rutaNoDeter1 = 		 "src/test/resources/automatasTestFicheros/noDeterminista1.txt";
+	String rutaDiciembre2016_B = "src/test/resources/automatasTestFicheros/diciembre2016B.txt";
+	String rutaDiciembre2016_C = "src/test/resources/automatasTestFicheros/diciembre2016C.txt";
+	String rutaDiciembre2016_D = "src/test/resources/automatasTestFicheros/diciembre2016D.txt";
+	String rutaDiciembre2014 = 	 "src/test/resources/automatasTestFicheros/diciembre2014.txt";
 	
 	/**
 	 * Fichero mal introducido
@@ -50,6 +48,39 @@ public class PushdownGeneratorApplicationTests {
 	}
 
 	/**
+	 * Primera linea mal formada -- simbolo fichero con multiples caracteres
+	 * @throws DatosEntradaErroneosException 
+	 */
+	@Test (expected = DatosEntradaErroneosException.class)	
+	public void testEntradaPrimeraLineaMalFormada() throws FileNotFoundException, IOException, AlfabetoNoValidoException, DatosEntradaErroneosException {
+		String definicion = "{a,b};{SD,A,B};{p,q,r};p;S;\n";
+		AutomataPila automata = new AutomataPila(definicion, aut);
+		assertNotNull(automata);
+	}
+	
+	/**
+	 * Primera linea mal formada
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws AlfabetoNoValidoException 
+	 * @throws DatosEntradaErroneosException 
+	 */
+	@Test (expected = DatosEntradaErroneosException.class)	
+	public void testTransicionFila1MalFormada() throws FileNotFoundException, IOException, AlfabetoNoValidoException, DatosEntradaErroneosException {
+		String definicion = "{a,b};{SD,A,B};{p,q,r};p;S;\n"
+					+	"f(a,b,c--)";
+		AutomataPila automata = new AutomataPila(definicion, aut);
+		assertNotNull(automata);
+	}
+	
+	@Test
+	public void testConstructorVacioAutomata(){
+		AutomataPila aut = new AutomataPila();
+		assertTrue(aut.getInicialPila() == ' ');
+		assertTrue(aut.getEstadoInicial().isEmpty());
+	}
+	
+	/**
 	 * El lenguaje aceptado es:
 	 * L = {y(ba)^m | y -> {c,d}*, y m= nº c's en y, m>=0
 	 * Debe aceptar (ej):
@@ -60,9 +91,8 @@ public class PushdownGeneratorApplicationTests {
 	 * @throws Exception
 	 */
 	@Test
-	public void testAPDiciembre2016() throws Exception{
-		
-		AutomataPila automata = aut.generaAutomataRuta(rutaDiciembre2016);
+	public void testAPDiciembre2016_D() throws Exception{
+		AutomataPila automata = aut.generaAutomataRuta(rutaDiciembre2016_D);
 		assertNotNull(automata);
 		
 		assertTrue(procesador.compruebaPalabraBT("", automata));		
@@ -95,7 +125,7 @@ public class PushdownGeneratorApplicationTests {
 	
 	@Test
 	public void testAPDiciembre2016C() throws Exception{
-		AutomataPila automata = aut.generaAutomataRuta(rutaDiciembre2016C);
+		AutomataPila automata = aut.generaAutomataRuta(rutaDiciembre2016_C);
 		assertNotNull(automata);
 		
 		assertTrue(procesador.compruebaPalabraBT("", automata));		

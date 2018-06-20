@@ -4,7 +4,6 @@ package com.pushdown.automaton.controller;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -20,6 +19,7 @@ import com.pushdown.automaton.utils.Utils;
 
 @Service
 public class ProcesadorPalabras {
+	private static final String LA_PALABRA = "La palabra: ";
 	private static Logger logger = LogManager.getLogger(ProcesadorPalabras.class.getName());
 	
 	/**
@@ -58,14 +58,14 @@ public class ProcesadorPalabras {
 		try {
 			resultado = compruebaBT(estadoActual, 0, palabraEntrada, pila,automata, 0);
 		} catch (NodosInfinitosException e) {
-			logger.info("La palabra: "+ palabraEntrada + " esta generando un bucle infinito: "+automata.toString());
+			logger.info(LA_PALABRA+ palabraEntrada + " esta generando un bucle infinito: "+automata.toString());
 			resultado = false;
 		}
 		String palabra = palabraEntrada.isEmpty() ? "vacia" : palabraEntrada;
 		if (resultado){
-			logger.info("La palabra: "+palabra+" esta aceptada por el automata: "+automata.getIdAutomata());
+			logger.info(LA_PALABRA+palabra+" esta aceptada por el automata: "+automata.getIdAutomata());
 		} else {
-			logger.info("La palabra: "+palabra+" NO esta aceptada por el automata: "+automata.getIdAutomata());
+			logger.info(LA_PALABRA+palabra+" NO esta aceptada por el automata: "+automata.getIdAutomata());
 		}
 		return resultado;
 	}
@@ -80,7 +80,6 @@ public class ProcesadorPalabras {
 	 * @throws NodosInfinitosException 
 	 */
 	private boolean compruebaBT(String estadoActual, int posicionCadena, String palabraEntrada, Deque<Character> pila,AutomataPila automata, int numLlamadasRecursivas) throws NodosInfinitosException {
-//		registrarEntradaBackTraking(estadoActual, posicionCadena, palabraEntrada, pila);
 		if (numLlamadasRecursivas > Utils.ALTURA_MAXIMA_ARBOL_BACKTRAKING) {
 			throw new NodosInfinitosException();
 		}
@@ -160,16 +159,4 @@ public class ProcesadorPalabras {
 		}
 		return exito;
 	}
-
-//	private void registrarEntradaBackTraking(String estadoActual, int posicionCadena, String palabraEntrada, Deque<Character> pila) {
-//		Iterator<Character> pilaTraza = pila.descendingIterator();
-//		StringBuilder sb = new StringBuilder("[");
-//		while (pilaTraza.hasNext())
-//			sb.append(pilaTraza.next()+",");
-//		sb.append("]");
-//		logger.info("Estado actual:"+estadoActual + 
-//				" posicionPalabra: "+posicionCadena+
-//				", palabraEntrada: "+palabraEntrada+
-//				" PILA: " + sb.toString());
-//	}
 }

@@ -56,10 +56,6 @@ public class AutomataPila {
 		this.estadosFinales = finales;
 	}
 	
-	public AutomataPila generaAutomataConRuta(String ruta, GeneradorAutomataPila generadorAutomataPila) throws IOException, AlfabetoNoValidoException, DatosEntradaErroneosException{
-		return generadorAutomataPila.generaAutomataRuta(ruta);
-	}
-	
 	/**
 	 * Genera el automata con una definición de texto
 	 * @param definicion
@@ -155,7 +151,20 @@ public class AutomataPila {
 	public void setTransicionesVaciado(List<TransicionIn> transicionesVaciado) {
 		this.transicionesVaciado = transicionesVaciado;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "AutomataPila [id: "+ idAutomata 
+			+ ", alfabetoLenguaje=" + alfabetoLenguaje 
+			+ ", alfabetoPila=" + alfabetoPila
+			+ ", estadosPila=" + estadosPila 
+			+ ", inicialPila=" + inicialPila 
+			+ ", estadoInicial=" + estadoInicial
+			+ ", transiciones=" + funcionesTransicion 
+			+ ", estadosFinales=" + estadosFinales 
+			+ "]";
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -171,7 +180,7 @@ public class AutomataPila {
 		result = prime * result + ((transicionesVaciado == null) ? 0 : transicionesVaciado.hashCode());
 		return result;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -225,17 +234,6 @@ public class AutomataPila {
 			return false;
 		return true;
 	}
-
-	@Override
-	public String toString() {
-		return "AutomataPila [id: "+ idAutomata 
-			+ ", alfabetoLenguaje=" + alfabetoLenguaje 
-			+ ", alfabetoPila=" + alfabetoPila
-			+ ", estadosPila=" + estadosPila 
-			+ ", inicialPila=" + inicialPila 
-			+ ", estadoInicial=" + estadoInicial
-			+ ", transiciones=" + funcionesTransicion 
-			+ ", estadosFinales=" + estadosFinales 
-			+ "]";
-	}
+	
+	
 }
