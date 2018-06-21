@@ -64,11 +64,19 @@ Documentation
 
 + How to use library, searching for `Usage Guide`_.
 
+How to start ?
+--------------
+
++ Download binary from: ``wget https://github.com/borjarg95/pushdown-generator/tarball/v1.0.16``
++ Unzip to new folder and enter to directory: ``unzip pushdown-generator-v1.0.16 && cd pushdown-generator-v1.0.16/``
++ Start with binary: ``java -jar pushdown-generator-1.0.16.jar``
+
 
 How to install ?
 ----------------
 
-+ Compile java sources: ``TODO: make sense``
++ Compile java sources: ``mvn install``
++ Execute compiled file (*with MAVEN*): ``mvn spring-boot:run``
 
 How to exec tests ?
 -------------------
