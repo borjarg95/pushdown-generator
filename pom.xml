@@ -5,7 +5,7 @@
 
 	<groupId>com.pushdown.model</groupId>
 	<artifactId>pushdown-generator</artifactId>
-	<version>1.0.16</version>
+	<version>1.0.16-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>pushdown-generator</name>

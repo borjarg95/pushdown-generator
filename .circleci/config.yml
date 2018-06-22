@@ -42,5 +42,5 @@ jobs:
       - store_test_results: 
           path: target/surefire-reports
       - store_artifacts:
-          path: target/pushdown-generator-1.0.16.jar
+          path: target/pushdown-generator-1.0.16-SNAPSHOT.jar
           destination: dist

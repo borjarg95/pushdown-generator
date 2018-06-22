@@ -29,4 +29,4 @@ test_script:
 after_test:
   - mvn surefire-report:report
 artifacts:
-  - path: "target\\pushdown-generator-1.0.16.jar"
+  - path: "target\\pushdown-generator-1.0.16-SNAPSHOT.jar"
