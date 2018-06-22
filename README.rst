@@ -81,7 +81,8 @@ How to install ?
 How to exec tests ?
 -------------------
 
-+ Tests from setup.py file : ``TODO: make sense``
++ Execute tests (*with MAVEN*) : ``mvn test``
++ Generate tests report (*XML and HTML formats*) : ``mvn surefire-report:report``
 
 
 Java tested versions
@@ -90,25 +91,17 @@ Java tested versions
 +-----------------------+------------------------+------------------------+
 |   **Version Name**    |    **Release Date**    |    **Tests status**    |
 +=======================+========================+========================+
-|      *JDK Beta*       |         *1995*         |      *not tested*      |
+|      *openjdk6*       |         *2006*         |     *not supported*    |
 +-----------------------+------------------------+------------------------+
-|      *JDK 1.1*        |         *1997*         |      *not tested*      |
+|      *openjdk7*       |         *2011*         |     *not supported*    |
 +-----------------------+------------------------+------------------------+
-|      *J2SE 1.2*       |         *1998*         |      *not tested*      |
+|      *openjdk8*       |         *2014*         |       *supported*      |
 +-----------------------+------------------------+------------------------+
-|      *J2SE 1.3*       |         *2000*         |      *not tested*      |
+|      *openjdk9*       |         *2017*         |       *supported*      |
 +-----------------------+------------------------+------------------------+
-|      *J2SE 1.4*       |         *2002*         |      *not tested*      |
+|      *openjdk10*      |         *2017*         |       *supported*      |
 +-----------------------+------------------------+------------------------+
-|      *J2SE 5.0*       |         *2004*         |      *not tested*      |
-+-----------------------+------------------------+------------------------+
-|      *Java SE 6*      |         *2006*         |      *not tested*      |
-+-----------------------+------------------------+------------------------+
-|      *Java SE 7*      |         *2011*         |      *not tested*      |
-+-----------------------+------------------------+------------------------+
-|  *Java SE 8 (LTS)*    |         *2014*         |      *not tested*      |
-+-----------------------+------------------------+------------------------+
-|      *Java SE 9*      |         *2017*         |      *not tested*      |
+|      *openjdk11*      |         *2018*         |     *not supported*    |
 +-----------------------+------------------------+------------------------+
 
 
@@ -123,11 +116,11 @@ MAVEN
 .. _Usage Guide: USAGE.rst
 .. _`maven in five minutes`: https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html
 .. _`install maven for linux/windows/mac`: http://www.baeldung.com/install-maven-on-windows-linux-mac
-.. |img_ci_travis_status| image:: https://travis-ci.org/Terseus/python-io-chunks.svg?branch=master
+.. |img_ci_travis_status| image:: https://travis-ci.org/borjarg95/pushdown-generator.svg?branch=master
     :target: https://travis-ci.org/borjarg95/pushdown-generator?branch=master
-.. |img_ci_appveyor_status| image:: https://ci.appveyor.com/api/projects/status/4a0tc5pis1bykt9x/branch/master?svg=true 
-    :target: https://ci.appveyor.com/api/projects/status/4a0tc5pis1bykt9x/branch/master
-.. |img_ci_circleci_status| image:: https://circleci.com/gh/borjarg95/pushdown-generator.svg?&style=shield&circle-token=80384cb2233d112dc0785278d5b7c3d8c6a5686c
-    :target: https://circleci.com/gh/borjarg95/pushdown-generator.svg?&style=shield&circle-token=80384cb2233d112dc0785278d5b7c3d8c6a5686c
-.. |img_ci_codeclimate_status| image:: https://api.codeclimate.com/v1/badges/46279cf9a6a47ed583d6/maintainability
-    :target: https://api.codeclimate.com/v1/badges/46279cf9a6a47ed583d6/maintainability
+.. |img_ci_appveyor_status| image:: https://ci.appveyor.com/api/projects/status/3xxoa0v87svm6l27m16o/branch/master?svg=true 
+    :target: https://ci.appveyor.com/api/projects/status/3xxoa0v87svm6l27m16o/branch/master
+.. |img_ci_circleci_status| image:: https://circleci.com/gh/borjarg95/pushdown-generator.svg?&style=shield&circle-token=48ff0ecc6afba2cbe94acec8060e8d5115d7da61
+    :target: https://circleci.com/gh/borjarg95/pushdown-generator.svg?&style=shield&circle-token=48ff0ecc6afba2cbe94acec8060e8d5115d7da61
+.. |img_ci_codeclimate_status| image:: https://api.codeclimate.com/v1/badges/f6443902cc85c540ff3b0abd95bb5045294b5875/maintainability
+    :target: https://api.codeclimate.com/v1/badges/f6443902cc85c540ff3b0abd95bb5045294b5875/maintainability

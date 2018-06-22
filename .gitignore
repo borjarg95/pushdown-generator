@@ -36,3 +36,5 @@ buildNumber.properties
 # Pushdown-generator
 logs/
 .settings/
+logs/*
+logs/logFile.log

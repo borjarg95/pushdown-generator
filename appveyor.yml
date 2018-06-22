@@ -1,0 +1,32 @@
+build: off
+branches:
+  only:
+    - master
+    - devel
+environment:
+  global:
+    # SDK v7.0 MSVC Express 2008's SetEnv.cmd script will fail if the
+    # /E:ON and /V:ON options are not enabled in the batch script intepreter
+    # See: http://stackoverflow.com/a/13751649/163740
+    CMD_IN_ENV: "cmd /E:ON /V:ON /C .\\appveyor\\run_with_env.cmd"
+
+  matrix:
+    - JAVA_HOME: C:\Program Files\Java\jdk1.8.0
+      DESC: "openjdk8"
+    - JAVA_HOME: C:\Program Files\Java\jdk9
+      DESC: "openjdk9"
+    - JAVA_HOME: C:\Program Files\Java\jdk10
+      DESC: "openjdk10"
+
+before_build:
+  - ps: choco install maven
+  - mvn --version
+  
+build_script:
+  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+test_script:
+  - mvn test -Dmaven.javadoc.skip=true -B -V
+after_test:
+  - mvn surefire-report:report
+artifacts:
+  - path: "target\\pushdown-generator-1.0.16.jar"

@@ -1,0 +1,46 @@
+# Java CircleCI 2.0 configuration file
+version: 2
+jobs:
+  build:
+    environment:
+      CC_TEST_REPORTER_ID: 181a274c2c68483ff80af63a8a87e1f5fab71f37744eab702f25695501b5ca85
+    docker:
+      - image: circleci/openjdk:8-jdk-browsers
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - restore_cache: # restore the saved cache after the first run or if `pom.xml` has changed
+          key: circleci-demo-java-spring-{{ checksum "pom.xml" }}
+
+      - run:
+          name: Install dependencies
+          command: |
+            # CI, codeclimate dependencies
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+      - run:
+          name: Install project
+          command: |
+            mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+      - run:
+          name: Before Tests
+          command: |
+            ./cc-test-reporter before-build
+      - run:
+          name: Run Tests
+          command: |
+            mvn test -Dmaven.javadoc.skip=true -B -V
+      - run:
+          name: After Tests # codeclimate 
+          command: |
+            mvn surefire-report:report
+      # uploads the test metadata from the `target/surefire-reports`
+      # directory so that it can show up in the CircleCI dashboard. 
+      - store_test_results: 
+          path: target/surefire-reports
+      - store_artifacts:
+          path: target/pushdown-generator-1.0.16.jar
+          destination: dist

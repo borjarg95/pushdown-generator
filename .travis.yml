@@ -1,0 +1,23 @@
+env:
+  global:
+addons:
+  apt:
+    packages:
+      - openjdk-6-jdk
+  sonarqube:
+    branches:
+    - master
+language: java
+jdk:
+- openjdk8
+- openjdk9
+- openjdk10
+
+install:
+- mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+script:
+  - mvn test -Dmaven.javadoc.skip=true -B -V  
+after_script:
+  - mvn surefire-report:report
+  - echo "TODO - upload artifacts
+  - echo "TODO - upload sonarqube code metrics"
