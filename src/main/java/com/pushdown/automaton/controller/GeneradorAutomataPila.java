@@ -24,6 +24,9 @@ import com.pushdown.automaton.utils.Utils;
 @Service
 public class GeneradorAutomataPila {
 	
+	private static final String TRANSICION_IN_MAL_DEFINIDA_EN_LINEA = "TransicionIn mal definida en linea: ";
+	private static final String TRANSICION_OUT_MAL_DEFINIDA_EN_LINEA = "TransicionOut mal definida en linea: ";
+
 	private BufferedReader bufferReader;
 
 	/**
@@ -103,9 +106,9 @@ public class GeneradorAutomataPila {
 		return line;
 	}
 
-	public AutomataPila generaAutomata(String definicion) throws IOException, AlfabetoNoValidoException, DatosEntradaErroneosException{
+	public AutomataPila generaAutomata(String definicion) throws AlfabetoNoValidoException, DatosEntradaErroneosException{
 		if (GenericValidator.isBlankOrNull(definicion)){
-			throw new IOException("Error en la creacion del automata");
+			throw new DatosEntradaErroneosException("Error en la creacion del automata");
 		}
 		String[] entrada =  definicion.split("\n");
 		String[] primeraLinea = entrada[0].split(Utils.SEPARADOR_CAMPOS);
@@ -134,7 +137,8 @@ public class GeneradorAutomataPila {
 	private TransicionIn generaTransicionEntrada(String[] vectorTransEntrada, AutomataPila automata, int line) throws DatosEntradaErroneosException, AlfabetoNoValidoException {
 		TransicionIn tranEntrada = new TransicionIn();
 		if (!automata.getEstadosPila().contains(vectorTransEntrada[0])){
-			throw new DatosEntradaErroneosException("El estado "+vectorTransEntrada[0]+" de la linea "+line+" no pertenece a los estados del automata");
+			throw new DatosEntradaErroneosException(TRANSICION_IN_MAL_DEFINIDA_EN_LINEA+line+", estado: "+vectorTransEntrada[0]
+					+" no pertenece a los estados del automata");
 		} else{
 			tranEntrada.setEstado(vectorTransEntrada[0]);
 		}
@@ -148,18 +152,18 @@ public class GeneradorAutomataPila {
 				if (automata.getAlfabetoLenguaje().contains(simEntradaAlfabeto.charAt(0))){
 					tranEntrada.setSimbEntrada(simEntradaAlfabeto.charAt(0));
 				} else {
-					throw new AlfabetoNoValidoException("El simbolo de entrada no pertenece al alfabeto del lenguaje");
+					throw new AlfabetoNoValidoException(TRANSICION_IN_MAL_DEFINIDA_EN_LINEA+line+"el simbolo de entrada no pertenece al alfabeto del lenguaje");
 				}
 			}
 		} else {
-			throw new DatosEntradaErroneosException("La transicion de entrada de la linea "+line+", es vacia");
+			throw new DatosEntradaErroneosException(TRANSICION_IN_MAL_DEFINIDA_EN_LINEA+line+", es vacia");
 		}
 		String simbPila = vectorTransEntrada[2].substring(0, vectorTransEntrada[2].length()-1);
-		if (!(simbPila.isEmpty()) && (simbPila.length() == 1) && 
-				(automata.getAlfabetoPila().contains(simbPila.charAt(0)))){
+		if ((simbPila.length() == 1) && automata.getAlfabetoPila().contains(simbPila.charAt(0))){
 			tranEntrada.setSimbCabezaPila(simbPila.charAt(0));
 		} else {
-			throw new DatosEntradaErroneosException("El simbolo  de pila esta mal informado o no pertenece al conjunto");
+			throw new DatosEntradaErroneosException(TRANSICION_IN_MAL_DEFINIDA_EN_LINEA+line+", el simbolo de pila: "+ simbPila +
+					" esta mal informado o no pertenece al conjunto");
 		}
 		return tranEntrada;
 	}
@@ -175,21 +179,26 @@ public class GeneradorAutomataPila {
 	private TransicionOut generaTransicionSalida(String[] vectorTransSalida, AutomataPila automata, int line) throws DatosEntradaErroneosException {
 		TransicionOut tranSalida = new TransicionOut();
 		String estadoDestino = vectorTransSalida[0].substring(1);
-		if (!automata.getEstadosPila().contains(estadoDestino)){
-			throw new DatosEntradaErroneosException("El estado "+estadoDestino+" de la linea "+line+" no pertenece a los estados del aut�mata");		
+		if (!automata.getEstadosPila().contains(estadoDestino)) {
+			throw new DatosEntradaErroneosException(TRANSICION_OUT_MAL_DEFINIDA_EN_LINEA+line+", estado "+estadoDestino+" no pertenece a los estados del automata");		
 		} else {
 			tranSalida.setEstadoSalida(estadoDestino);
 		}
 		String nuevaCabezaPila = vectorTransSalida[1];
 		List<Character> cabezaPila = new ArrayList<>();
-		if (nuevaCabezaPila.trim().isEmpty()){									
-			//Es una transici�n lambda
+		if (nuevaCabezaPila.trim().isEmpty()) {//Es una transicion lambda, se utiliza el char @ para representarlo							
 			cabezaPila.add(Utils.LAMBDA);
-			tranSalida.setNuevaCabezaPila(cabezaPila); //utilizamos el s�mbolo @ como lambda.
+			tranSalida.setNuevaCabezaPila(cabezaPila);
 		} else {
-			//procesamos la cadena de caracteres a la inversa, para facilitar la inserci�n en la pila
-			for (int i = (nuevaCabezaPila.length()-1);i>=0;i--)
-				cabezaPila.add(nuevaCabezaPila.charAt(i));
+			//procesamos la cadena de caracteres a la inversa, para facilitar la inserción en la pila
+			for (int i = (nuevaCabezaPila.length()-1);i>=0;i--) {
+				if (automata.getAlfabetoPila().contains(nuevaCabezaPila.charAt(i))) {
+					cabezaPila.add(nuevaCabezaPila.charAt(i));
+				} else {
+					throw new DatosEntradaErroneosException(TRANSICION_OUT_MAL_DEFINIDA_EN_LINEA+line+", símbolo "+nuevaCabezaPila.charAt(i)
+							+" no pertenece a los símbolos del automata");		
+				}
+			}
 		}
 		tranSalida.setNuevaCabezaPila(cabezaPila);
 		return tranSalida;
@@ -216,39 +225,10 @@ public class GeneradorAutomataPila {
 		String simbInicial = primeraLinea[4];
 		
 		validaDatosPrimeraLinea(alfabetoLenguaje, simbAutomata, estados);
+		rellenaAlfabetoLenguaje(automata, alfabetoLenguaje);
+		rellenaSimbolosAutomata(automata, simbAutomata);
+		rellenaEstadosAutomata(automata, estados);
 		
-		//1	- Rellenamos el alfabeto del lenguaje
-		alfabetoLenguaje = alfabetoLenguaje.substring(1, alfabetoLenguaje.length()-1); //Suprimimos las llaves
-
-		for (String a : alfabetoLenguaje.split(Utils.SEPARADOR_ELEMENTOS_CAMPO)) {
-			if (a.length()!=1) {
-				throw new DatosEntradaErroneosException("Los elementos del alfabeto son caracteres, "
-						+ "no puede ser un string compuesto");
-			}
-			automata.getAlfabetoLenguaje().add(a.charAt(0));
-		}
-		
-		//2 - Rellenamos los simbolos del automata
-		simbAutomata = simbAutomata.substring(1, simbAutomata.length()-1); //Suprimimos las llaves
-		String[] vectorSimbAutomata = simbAutomata.split(Utils.SEPARADOR_ELEMENTOS_CAMPO);		
-		
-		for(String a : vectorSimbAutomata){
-			if (a.length()!=1){
-				throw new DatosEntradaErroneosException("Los simbolos del automata son caracteres, "
-						+ "no puede ser un string compuesto");
-			}
-			automata.getAlfabetoPila().add(a.charAt(0));
-		}
-		
-		//3 - Rellenamos los estados del automata
-		estados = estados.substring(1, estados.length()-1); //suprimimos los corchetes
-		for (String a : estados.split(Utils.SEPARADOR_ELEMENTOS_CAMPO)){
-			if (GenericValidator.isBlankOrNull(a)){
-				throw new DatosEntradaErroneosException("Alguno de los estados introducios esta vacio. "
-						+ "Deben informarse correctamente");
-			}
-			automata.getEstadosPila().add(a.trim()); //eliminamos los posibles blancos introducidos
-		}
 		//4 - Simbolo inicial
 		if (GenericValidator.isBlankOrNull(simbInicial) || simbInicial.length()!=1){
 			throw new DatosEntradaErroneosException("Los simbolos de pila no pueden ser cadenas de caracteres, "
@@ -266,6 +246,21 @@ public class GeneradorAutomataPila {
 		}
 	}
 
+	private void validaDatosPrimeraLinea(String alfabetoLenguaje, String simbAutomata, String estados)
+			throws AlfabetoNoValidoException, DatosEntradaErroneosException {
+		if (alfabetoLenguaje.length()<=2){
+			throw new AlfabetoNoValidoException(CodigosError.ALFABETO_LENGUAJE.getValue());
+		}
+
+		if (simbAutomata.length()<=2){
+			throw new DatosEntradaErroneosException("El campo simbolosAutomata no está informado");
+		}
+		
+		if (estados.length()<=2){
+			throw new DatosEntradaErroneosException("El conjunto estados no está informado");
+		}
+	}
+	
 	/**
 	 * El tamaño de la linea principal deben ser 5 secciones
 	 * @param primeraLinea
@@ -277,6 +272,67 @@ public class GeneradorAutomataPila {
 		}
 	}
 	
+	/**
+	 * @param automata
+	 * @param alfabetoLenguaje
+	 * @throws DatosEntradaErroneosException
+	 */
+	private void rellenaAlfabetoLenguaje(AutomataPila automata, String alfabetoLenguaje)
+			throws DatosEntradaErroneosException {
+		alfabetoLenguaje = alfabetoLenguaje.substring(1, alfabetoLenguaje.length()-1); //Suprimimos las llaves
+		
+		for (String a : alfabetoLenguaje.split(Utils.SEPARADOR_ELEMENTOS_CAMPO)) {
+			if (a.length()!=1) {
+				throw new DatosEntradaErroneosException("Los elementos del alfabeto son caracteres, "
+						+ "no puede ser un string compuesto");
+			}
+			automata.getAlfabetoLenguaje().add(a.charAt(0));
+		}
+	}
+
+	/**
+	 * Este metodo pocesa la cadena <b>simbAutomata</b> que debe contener los caracteres
+	 * '{' al inicio y '}' al final de los que se extraen 
+	 * los simbolos que pueden incluirse en la pila.
+	 * 
+	 * @param automata
+	 * @param simbAutomata
+	 * @throws DatosEntradaErroneosException
+	 */
+	private void rellenaSimbolosAutomata(AutomataPila automata, String simbAutomata)
+			throws DatosEntradaErroneosException {
+		simbAutomata = simbAutomata.substring(1, simbAutomata.length()-1); //Suprimimos las llaves
+		String[] vectorSimbAutomata = simbAutomata.split(Utils.SEPARADOR_ELEMENTOS_CAMPO);		
+		
+		for(String a : vectorSimbAutomata){
+			if (a.length()!=1){
+				throw new DatosEntradaErroneosException("Los simbolos del automata son caracteres, "
+						+ "no puede ser un string compuesto");
+			}
+			automata.getAlfabetoPila().add(a.charAt(0));
+		}
+	}
+	
+	/**
+	 * Este metodo pocesa la cadena <b>estados</b> que debe contener los caracteres
+	 * '{' al inicio y '}' al final de los que se extraen 
+	 * los estados por los que puede transitar el automata.
+	 * 
+	 * @param automata
+	 * @param estados
+	 * @throws DatosEntradaErroneosException
+	 */
+	private void rellenaEstadosAutomata(AutomataPila automata, String estados) throws DatosEntradaErroneosException {
+		estados = estados.substring(1, estados.length()-1); //suprimimos los corchetes
+		for (String a : estados.split(Utils.SEPARADOR_ELEMENTOS_CAMPO)){
+			if (GenericValidator.isBlankOrNull(a)){
+				throw new DatosEntradaErroneosException("Alguno de los estados introducios esta vacio. "
+						+ "Deben informarse correctamente");
+			}
+			automata.getEstadosPila().add(a.trim()); //eliminamos los posibles blancos introducidos
+		}
+	}
+
 	/**
 	 * Dada una linea de fichero o de cadena de entrada, comprueba que los extremos de la transicion esta formado correctamente
 	 * @param linea
@@ -333,19 +389,4 @@ public class GeneradorAutomataPila {
 		}
 		return vectorTransEntrada;
 	}	
-	
-	private void validaDatosPrimeraLinea(String alfabetoLenguaje, String simbAutomata, String estados)
-			throws AlfabetoNoValidoException, DatosEntradaErroneosException {
-		if (alfabetoLenguaje.length()<=2){
-			throw new AlfabetoNoValidoException(CodigosError.ALFABETO_LENGUAJE.getValue());
-		}
-
-		if (simbAutomata.length()<=2){
-			throw new DatosEntradaErroneosException("El campo simbolosAutomata no está informado");
-		}
-		
-		if (estados.length()<=2){
-			throw new DatosEntradaErroneosException("El conjunto estados no está informado");
-		}
-	}
 }

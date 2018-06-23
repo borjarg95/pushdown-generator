@@ -42,12 +42,9 @@ public class AutomataController {
 	@Qualifier("generadorAutomataPila")
 	private GeneradorAutomataPila generadorAutomataPila;
  
-	@WebEndpoint
-	@Timed
 	@RequestMapping(value = "/Generate", method = RequestMethod.POST)
 	public ResponseEntity<?> generaAutomata(@RequestBody String entrada, HttpServletRequest request) {
 		String entradaConsulta = Utils.correctorCharEspeciales(entrada);
-		logger.info(request.getLocalName() +" : " +request.getLocalAddr());
 		try {
 			if (automatasGenerados.size() > Utils.TAMANIO_MAPA_AUTOMATAS_GENERADOS)
 				automatasGenerados.clear();
@@ -62,8 +59,6 @@ public class AutomataController {
 		}
 	}
 
-	@WebEndpoint
-	@Timed
 	@RequestMapping(value = "/CheckWord/{index}/{palabra}", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<?> validaPalabra(@PathVariable("index") String index, @PathVariable("palabra") String palabra) {
 		

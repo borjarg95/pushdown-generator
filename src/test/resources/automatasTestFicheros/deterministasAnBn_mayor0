@@ -1,0 +1,6 @@
+{a,b};{S,N};{q0,q1};q0;S;
+f(q0,a,S)=(q0,XS)
+f(q0,a,X)=(q0,XX)
+f(q0,b,X)=(q1, )
+f(q1,b,X)=(q1, )
+f(q1,b,S)=(q1, )

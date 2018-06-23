@@ -2,7 +2,7 @@
  * GLOBAL VARs
  */
 const EXAMPLE_NOT_DETERMINISTIC = "{a,b};{S,A,B};{p,q,r};p;S;\nf(p,b,S)=(p,BS)\nf(p,b,B)=(p,BB)\nf(p, ,S)=(p, )\nf(p,b,B)=(r, )\nf(p,a,B)=(q, )\nf(q,a,B)=(q, )\nf(q, ,S)=(q, )\nf(q,b,B)=(r, )\nf(r,b,B)=(r, )\nf(r, ,S)=(r, )";
-
+const EXAMPLE_SIMPLE_DETERMINISTIC = "{a,b};{S,N};{q0,q1};q0;S;\nf(q0,a,S)=(q0,NS)\nf(q0,a,N)=(q0,NN)\nf(q0,b,N)=(q1, )\nf(q1,b,N)=(q1, )\nf(q1,b,S)=(q1, )"
 /**
  * Metodo que procesa la entrada y genera un nuevo automata
  * 
@@ -92,9 +92,9 @@ function compruebaPalabra(){
 function procesa_respuesta(data, palabra){
 	if (palabra=="+") palabra = "vacia"
 	if (data){
-		$("#resultados").append("<li>La palabra <b class=\"palabraAceptada\">"+ palabra + "</b> está aceptada.");
+		$("#resultados").append("<li><b class=\"palabraAceptada\">"+ palabra + "</b> aceptada.");
 	} else {
-		$("#resultados").append("<li>La palabra <b class=\"palabraRechazada\">"+ palabra + "</b> no está aceptada.");
+		$("#resultados").append("<li><b class=\"palabraRechazada\">"+ palabra + "</b> rechazada.");
 
 	}
 }
@@ -117,7 +117,7 @@ function vaciarAutomata(){
 
 function ModalNotif(responseMessage) {
     let ele = $("#modal-notification")
-	let secToClose = 3000;
+	let secToClose = 4000;
 	ele.modal("show");
 	if (typeof(responseMessage) !== "undefined") {
 		$("#modal-notification-response-text").text(responseMessage)
@@ -132,7 +132,10 @@ function UseExample(e) {
 	let exampleText = "";
 	switch (element.attr("id")) {
 		case "useExampleNotDeterministic":
-			exampleText = $("#automata-not-determinictic-code").text();
+			exampleText = $("#automaton-not-deterministic-code").text();
+			break;
+		case "useSimpleExampleDeterministic":
+			exampleText = $("#automaton-deterministic-code").text();
 			break;
 		default:
 			ModalNotif("Fail at selecting example to use")
@@ -146,8 +149,10 @@ $(document).ready(function () {
 	// first at all, hide all are neccessary
 	$("#pg-definition").hide();
 	// Insert data examples
-	$("#automata-not-determinictic-code").text(EXAMPLE_NOT_DETERMINISTIC);
+	$("#automaton-not-deterministic-code").text(EXAMPLE_NOT_DETERMINISTIC);
+	$("#automaton-deterministic-code").text(EXAMPLE_SIMPLE_DETERMINISTIC)
 	// Enable hooks
 	$("#useExampleNotDeterministic").on('click', UseExample)
+	$("#useSimpleExampleDeterministic").on('click', UseExample)
     console.log("Pushdown-generator app ready to works");
 });

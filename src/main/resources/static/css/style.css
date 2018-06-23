@@ -65,9 +65,10 @@ span:after {
 Examples GUI settings
 */
 
-#automata-not-determinictic-code {
+#automaton-not-deterministic-code, #automaton-deterministic-code{
 	text-align: left;
 }
+
 
 /*
 modal-notification

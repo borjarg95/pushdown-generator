@@ -30,7 +30,7 @@ public class Test_ValidacionesDatosEntrada {
 		assertNotNull(automata);
 	}
 
-	@Test (expected = IOException.class)	
+	@Test (expected = DatosEntradaErroneosException.class)	
 	public void errorEsperado_ruta_nullPorGenerador() throws FileNotFoundException, IOException, AlfabetoNoValidoException, DatosEntradaErroneosException {
 		AutomataPila automata = aut.generaAutomata(null);
 		assertNotNull(automata);
@@ -42,7 +42,7 @@ public class Test_ValidacionesDatosEntrada {
 		assertNotNull(automata);
 	}
 
-	@Test (expected = IOException.class)	
+	@Test (expected = DatosEntradaErroneosException.class)	
 	public void errorEsperado_ruta_nullPorConstructor() throws FileNotFoundException, IOException, AlfabetoNoValidoException, DatosEntradaErroneosException {
 		AutomataPila automata = aut.generaAutomata(null);
 		assertNotNull(automata);
