@@ -1,11 +1,16 @@
 /**
+ * GLOBAL VARs
+ */
+const EXAMPLE_NOT_DETERMINISTIC = "{a,b};{S,A,B};{p,q,r};p;S;\nf(p,b,S)=(p,BS)\nf(p,b,B)=(p,BB)\nf(p, ,S)=(p, )\nf(p,b,B)=(r, )\nf(p,a,B)=(q, )\nf(q,a,B)=(q, )\nf(q, ,S)=(q, )\nf(q,b,B)=(r, )\nf(r,b,B)=(r, )\nf(r, ,S)=(r, )";
+
+/**
  * Metodo que procesa la entrada y genera un nuevo automata
  * 
  */
 function generarDefinicionLarga() {
 	var texto= $("#texto").val();
 	if (texto.length==0){
-		alert("¡Debes escribir una descripción!")
+		ModalNotif("¡Debes escribir una descripción!")
 		return 0;
 	}
 	var busqueda = "/Generate"
@@ -18,7 +23,7 @@ function generarDefinicionLarga() {
 		    },
 		    error: function (mensaje, textStatus)
 		    {
-		    	alert(mensaje.responseText);
+				ModalNotif(mensaje.responseText);
 		    }
 		});
 }	
@@ -54,12 +59,13 @@ function procesarAutomataResultante(automata){
 		//añadimos a la lista a mostrar en la información
 		$("#transiciones").append("<li>"+transLista+ "</li>");		
 	}
+	$("#pg-examples").fadeOut();
 }
 
 function compruebaPalabra(){
 	var palabra = $("#palabra").val();
 	if (palabra.length==0){
-		alert("¡Debes escribir una palabra!");
+		ModalNotif("¡Debes escribir una palabra!");
 		return;
 	} else if(palabra.charAt(0) == " "){ //si empieza por blanco es la palabra vacía
 		palabra = "+";
@@ -74,7 +80,7 @@ function compruebaPalabra(){
 		    },
 		    error: function(data) {
 		    	procesa_respuesta(false, palabra);
-		        alert(data.responseText);
+		        ModalNotif(data.responseText);
 		    }
 		});
 		
@@ -99,7 +105,6 @@ function procesa_respuesta(data, palabra){
  */
 function vaciarAutomata(){
 	//Vaciamos los resultados anteriores por si generamos un nuevo automata
-	$("#infoAutomata").removeClass('hidden');
 	$("#alfabetoLenguaje").empty();
 	$("#alfabetoPila").empty();
 	$("#estadosPila").empty();
@@ -107,4 +112,42 @@ function vaciarAutomata(){
 	$("#simbInicialPila").empty();
 	$("#transiciones").empty();
 	$("#resultados").empty();
+	$("#pg-definition").fadeIn();
 }
+
+function ModalNotif(responseMessage) {
+    let ele = $("#modal-notification")
+	let secToClose = 3000;
+	ele.modal("show");
+	if (typeof(responseMessage) !== "undefined") {
+		$("#modal-notification-response-text").text(responseMessage)
+		setTimeout(function(){
+			ele.modal('hide')
+		}, secToClose);
+	}
+}
+
+function UseExample(e) {
+	let element = $(e.currentTarget);
+	let exampleText = "";
+	switch (element.attr("id")) {
+		case "useExampleNotDeterministic":
+			exampleText = $("#automata-not-determinictic-code").text();
+			break;
+		default:
+			ModalNotif("Fail at selecting example to use")
+			break;
+	}
+	$("#texto").text(exampleText)
+}
+
+// Main point for JS
+$(document).ready(function () {
+	// first at all, hide all are neccessary
+	$("#pg-definition").hide();
+	// Insert data examples
+	$("#automata-not-determinictic-code").text(EXAMPLE_NOT_DETERMINISTIC);
+	// Enable hooks
+	$("#useExampleNotDeterministic").on('click', UseExample)
+    console.log("Pushdown-generator app ready to works");
+});

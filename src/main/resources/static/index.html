@@ -1,170 +1,245 @@
 <!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8">
-	<title>PUSHDOWN AUTOMATON GENERADOR</title>
-	<link rel="stylesheet" href="css/style.css" />
-	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
-	<link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.4/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/3.3.4/css/bootstrap.min.css}" rel="stylesheet" media="screen" />
-	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css"/>
-	
-	<script src="js/App.js"></script>
-	<script src="https://code.jquery.com/jquery-2.2.2.js"></script>
-	<script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-</head>
-<body>
-	<!-- Imagen constante que permite suber al inicio de la página -->	
-	<div class="row">
-		<div class="col-md-3">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h3>GENERADOR</h3>
-				</div>
-				<div class="panel-body">		
-					<pre><h5>Escribe la<br>definición completa</h5></pre>
-					<div>
-						<textarea class="form-control" placeholder="Texto"  rows="11" name='texto' id='texto' style="resize:none"></textarea>
-						<br>
-					</div>
-					<div class="btn-group">
-					</div>					
-					<input class="btn btn-success pull-right" type="submit" role="button" value="Generar" onclick="generarDefinicionLarga()" />					
-				</div> <!-- Cierre div panel-body -->
-			</div><!-- Cierre div panel-default -->
+<html lang="es">
 
-		</div><!-- Cierre div col-md-3 -->
-		<!-- zona central de la página -->
-		<div class="col-md-7">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-				<h3>DEFINICIÓN</h3>
-				</div>
-				<div class="panel-body text-left">
-					<div id="infoAutomata" class="hidden">
-						<div class="row">						
-							<div class="col-md-6"><!-- Información de automata -->
-								<pre class="descripciones">Alfabeto del lenguaje: <span class="label label-default" id = "alfabetoLenguaje"></span></pre>
-								<pre class="descripciones">Alfabeto de la pila:   <span class="label label-default" id = "alfabetoPila"></span></pre>
-								<pre class="descripciones">Estados de la pila:    <span class="label label-default" id = "estadosPila"></span></pre>
-								<pre class="descripciones">Estado inicial pila:   <span class="label label-default" id = "estadoInicial"></span></pre>
-								<pre class="descripciones">Simbolo inicial pila:  <span class="label label-default" id = "simbInicialPila"></span></pre>
-								<pre class="descripciones">Transiciones:<br>	
-									<div id="transiciones"></div>
-								</pre>
-								<div id="idAutomata" style="visibility: hidden">
-									<input class="form-control col-xs-3" type='value' id='identificador' value=""/>
-								</div>
-							</div>	<!-- Cierre información automata -->				
-							<div class="col-md-6"> <!-- Validaciones de palabras -->
-								<div class="form-group row">
-	     							<div class="col-xs-8">					
-										<input class="form-control col-xs-3" placeholder="Palabra" type='text' name='palabra' id='palabra'/>
-										<div id="divResultados">
-											<ul id="resultados"></ul>
-										</div>
-									</div>
-									<div class="col-xs-3">
-										<input class="btn btn-success pull-right" type="submit" role="button" value="Validar" onclick="compruebaPalabra()" />					
-									</div>								
-								</div>
-							</div> <!--  Cierre validaciones de palabras -->
-						</div>
-					</div><!-- cierre Contenedor que contiene la informacion del automata generado-->								 			  
-				</div> <!--cierre div central-->
-			</div>
-		</div>
-		<!-- Columna de modales de información auxiliar -->
-		<div class="col-rd-2"> 
-			<button type="button" class="btn btn-info" data-toggle="modal" data-target="#infoUtil">Ayuda</button><br><br>
-			<button type="button" class="btn btn-success" data-toggle="modal" data-target="#ejemploAutomata">Ejemplo de<br>definición <br> de automata</button>
-			
-			<!-- Modal guia de uso-->
-			<div id="infoUtil" class="modal fade modal -sm" role="dialog">
-			  <div class="modal-dialog">
-			
-			    <!-- Modal content-->
-				<div class="modal-content">
-					<div class="modal-header">
-				        <button type="button" class="close" data-dismiss="modal">&times;</button>
-				        <h4 class="modal-title">Formato de las definiciones de entrada para generar automatas</h4>
-				</div>
-				<div class="modal-body">
-					<p>
-						<b>La primera linea contiene separados por el simbolo <b style="color:green">; </b>los siguientes elementos: </b>
-						<ol> 
-							<li>Alfabeto lenguaje: <b class="ejemploPlantilla">{a,b}</b></li>
-							<li>Simbolos automata: <b class="ejemploPlantilla">{S,A,B}</b></li>
-							<li>Conjunto de estados: <b class="ejemploPlantilla">{p,q,r}</b></li>
-							<li>Estado inicial: <b class="ejemploPlantilla">p</b></li>
-							<li>Simbolo inicial de pila: <b class="ejemploPlantilla">S</b></li>
-						</ol> 
-						 <i class="ejemplo">Ejemplo: {a,b};{S,A,B};{p,q,r};p;S;</i>					 
-					</p>
-					<p>
-						<b>Una transición por linea:</b>
-						<ol> 
-							<li>
-								Transicion de entrada: <b style="color:blue">f( , , )</b>
-								<ul>
-									<li>Estado origen: <b class="ejemploPlantilla">p</b></li>
-									<li>
-										Simbolo entrada: <b class="ejemploPlantilla">b</b>   
-										<i class="informacionAuxiliar">espacio en blanco = &lambda;</i>
-									</li>
-									<li>Simbolo cabeza pila: <b class="ejemploPlantilla">S</b></li>
-								</ul>
-							</li>
-							<li>Unión <b class="ejemploPlantilla">=</b></li>
-							<li>
-								Transición de salida: <b class="ejemploPlantilla">{p,q,r}</b>
-								<ul>
-									<li>Estado destino: <b class="ejemploPlantilla">p</b></li>
-									<li>Nueva cabeza de pila: <b class="ejemploPlantilla">BS</b></li>
-								</ul>
-							</li>
-							
-						</ol> 	
-						<i class="ejemplo">Ejemplo de transición: f(p,b,S)=(p,BS)</i><br>
-						<i class="ejemplo">Ejemplo de transición con  &lambda;: f(p,b,S)=(p,BS)</i>								 
-					</p>
-				</div>
-			      <div class="modal-footer">
-			        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-			      </div>
-			    </div>
-			  </div>
-			</div> <!-- Cierre modal guía de uso -->
-			<div id="ejemploAutomata" class="modal fade -sm" role="dialog">
-				<div class="modal-dialog">
-			    	<div class="modal-content">
-			    		<div class="modal-header">
-			       			 <button type="button" class="close" data-dismiss="modal">&times;</button>
-			        		<h4 class="modal-title">Automata no determinista con transiciones &lambda;</h4>
-			      		</div>
-						<div class="modal-body">
-							<p>
-								{a,b};{S,A,B};{p,q,r};p;S;<br>
-								f(p,b,S)=(p,BS)<br>
-								f(p,b,B)=(p,BB)<br>
-								f(p, ,S)=(p, )<br>
-								f(p,b,B)=(r, )<br>
-								f(p,a,B)=(q, )<br>
-								f(q,a,B)=(q, )<br>
-								f(q, ,S)=(q, )<br>
-								f(q,b,B)=(r, )<br>
-								f(r,b,B)=(r, )<br>
-								f(r, ,S)=(r, )<br>
-							</p>
-						</div><!-- Cierre div body de modal ejemplo -->
-						<div class="modal-footer">
-							<p align="left"><b>Examen Diciembre 2014, Lenguaje = {b<sup>n</sup>a<sup>m</sup>b<sup>(n-m)</sup> | n,m ≥ 0, n ≥ m}</b></p>
-			        		<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-			      		</div><!-- Cierre div pie del ejemplo -->		
-					</div>
-				</div>
-			</div><!-- Cierre div ejemplo -->	
-		</div>	
-	</div> 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Pushdown Generator</title>
+    <link rel="stylesheet" href="css/normalize.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+        crossorigin="anonymous">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+    <!-- JSP scripts-->
+    <script src="js/App.js"></script>
+</head>
+
+<body class="container-fluid">
+    <header id="main-header" class="row">
+        <nav class="navbar navbar-light bg-light">
+            <a class="navbar-brand" href="https://github.com/borjarg95/pushdown-generator" target="_blank">
+                <img src="" width="30" height="30" class="d-inline-block align-top" alt="">
+                <span class="glyphicon glyphicon-question-sign icon-github"></span> Pushdown-Generator
+            </a>
+        </nav>
+    </header>
+    <article id="main-content" class="row">
+        <section id="pg-generator" class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            <h3>
+                Generador
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-help">
+                    Ayuda
+                    <span class="glyphicon glyphicon-question-sign"></span>
+                </button>
+            </h3>
+            <div>
+                <textarea class="form-control" placeholder="Texto" rows="11" name='texto' id='texto' style="resize:none"></textarea>
+                <br>
+            </div>
+            <div class="btn-group">
+            </div>
+            <input class="btn btn-success pull-right" type="submit" role="button" value="Generar" onclick="generarDefinicionLarga()"
+            />
+        </section>
+        <section id="pg-definition" class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            <h3>Definici&oacute;n
+                <i> del aut&oacute;mata</i>
+            </h3>
+            <div class="row">
+                <!-- Información de automata -->
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                    <pre class="descripciones">Alfabeto del lenguaje: <span class="label label-default" id = "alfabetoLenguaje"></span></pre>
+                    <pre class="descripciones">Alfabeto de la pila:   <span class="label label-default" id = "alfabetoPila"></span></pre>
+                    <pre class="descripciones">Estados de la pila:    <span class="label label-default" id = "estadosPila"></span></pre>
+                    <pre class="descripciones">Estado inicial pila:   <span class="label label-default" id = "estadoInicial"></span></pre>
+                    <pre class="descripciones">Simbolo inicial pila:  <span class="label label-default" id = "simbInicialPila"></span></pre>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"></div>
+                <pre class="descripciones">
+                                <span data-separator=":">Transiciones</span>
+                                <div id="transiciones"></div>
+                            </pre>
+            </div>
+            <div id="idAutomata" class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="visibility: hidden">
+                <input class="form-control col-lg-3 col-md-3 col-sm-3 col-xs-3" type='value' id='identificador' value="" />
+            </div>
+            <!-- Cierre información automata -->
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                <!-- Validaciones de palabras -->
+                <div class="form-group row">
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                        <input class="form-control col-lg-3 col-md-3 col-sm-3 col-xs-3" placeholder="Palabra" type='text' name='palabra' id='palabra'
+                        />
+                        <div id="divResultados">
+                            <ul id="resultados"></ul>
+                        </div>
+                    </div>
+                    <div class="col-xs-3">
+                        <input class="btn btn-success pull-right" type="submit" role="button" value="Validar" onclick="compruebaPalabra()" />
+                    </div>
+                </div>
+            </div>
+            <!--  Cierre validaciones de palabras -->
+            </div>
+            <!-- cierre Contenedor que contiene la informacion del automata generado-->
+        </section>
+        <section id="pg-examples" class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+            <h3>Ejemplos
+                <i>de definiciones</i>
+            </h3>
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a data-toggle="tab" href="#automata-not-deterministic">Automata no determinista con transiciones</a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#more-examples">More examples soon</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="automata-not-deterministic" class="tab-pane fade in active">
+                    <pre id="automata-not-determinictic-code"></pre>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <p>
+                            <b>Lenguaje = {b
+                                <sup>n</sup>a
+                                <sup>m</sup>b
+                                <sup>(n-m)</sup> | n,m ≥ 0, n ≥ m}</b>
+                        </p>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <button type="button" name="" id="useExampleNotDeterministic" class="btn btn-info">Usar Ejemplo</button>
+                    </div>
+                </div>
+                <div id="more-examples" class="tab-pane fade">
+                    <h4>Comming soon</h4>
+                </div>
+            </div>
+        </section>
+    </article>
+    <footer id="main-footer" class="row">
+        <div class="col-lg-12 col-sm-12 col-md-12 col-xs-12">
+            <h4>Licensed down GNU 3.0 License &copy;</h4>
+            <p>
+                <i>Thank you to contributors
+                    <span>,</span>
+                    <a href="https://www.linkedin.com/in/borja-rodr%C3%ADguez-gonz%C3%A1lez-b7695aba/" target="_blank">@borjarg95</a>
+                    <span>,</span>
+                    <a href="https://github.com/borjarg95" target="_blank">follow at github</a>
+                </i>
+            </p>
+        </div>
+    </footer>
+
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="modal-help" tabindex="-1" role="dialog" aria-labelledby="modal-help-label" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-help-label">Formato de las definiciones de entrada para generar automatas</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        <b>La primera linea contiene separados por el simbolo
+                            <b style="color:green">; </b>los siguientes elementos: </b>
+                        <ol>
+                            <li>Alfabeto lenguaje:
+                                <b class="ejemploPlantilla">{a,b}</b>
+                            </li>
+                            <li>Simbolos automata:
+                                <b class="ejemploPlantilla">{S,A,B}</b>
+                            </li>
+                            <li>Conjunto de estados:
+                                <b class="ejemploPlantilla">{p,q,r}</b>
+                            </li>
+                            <li>Estado inicial:
+                                <b class="ejemploPlantilla">p</b>
+                            </li>
+                            <li>Simbolo inicial de pila:
+                                <b class="ejemploPlantilla">S</b>
+                            </li>
+                        </ol>
+                        <i class="ejemplo">Ejemplo: {a,b};{S,A,B};{p,q,r};p;S;</i>
+                    </p>
+                    <p>
+                        <b>Una transición por linea:</b>
+                        <ol>
+                            <li>
+                                Transicion de entrada:
+                                <b style="color:blue">f( , , )</b>
+                                <ul>
+                                    <li>Estado origen:
+                                        <b class="ejemploPlantilla">p</b>
+                                    </li>
+                                    <li>
+                                        Simbolo entrada:
+                                        <b class="ejemploPlantilla">b</b>
+                                        <i class="informacionAuxiliar">espacio en blanco = &lambda;</i>
+                                    </li>
+                                    <li>Simbolo cabeza pila:
+                                        <b class="ejemploPlantilla">S</b>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>Unión
+                                <b class="ejemploPlantilla">=</b>
+                            </li>
+                            <li>
+                                Transición de salida:
+                                <b class="ejemploPlantilla">{p,q,r}</b>
+                                <ul>
+                                    <li>Estado destino:
+                                        <b class="ejemploPlantilla">p</b>
+                                    </li>
+                                    <li>Nueva cabeza de pila:
+                                        <b class="ejemploPlantilla">BS</b>
+                                    </li>
+                                </ul>
+                            </li>
+
+                        </ol>
+                        <i class="ejemplo">Ejemplo de transición: f(p,b,S)=(p,BS)</i>
+                        <br>
+                        <i class="ejemplo">Ejemplo de transición con &lambda;: f(p,b,S)=(p,BS)</i>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- modal-notification -->
+    <div class="modal fade" id="modal-notification" tabindex="-1" role="dialog" aria-labelledby="modal-notification-title" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="modal-notification-response-text"></p>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
+
 </html>

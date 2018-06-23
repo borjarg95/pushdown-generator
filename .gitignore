@@ -34,7 +34,6 @@ buildNumber.properties
 /.nb-gradle/
 
 # Pushdown-generator
-logs/
 .settings/
-logs/*
-logs/logFile.log
+logs/pushdown-generator.log
+logs/*.*.*.gz

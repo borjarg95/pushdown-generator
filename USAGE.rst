@@ -10,3 +10,9 @@ The packing of this proyect is as a JAR, for running the application you just ne
    This will run in the port 7795 a tomcat with the endpoints.
 
 3: http://localhost:7795 are going to contains the SPA (Single Page Application).
+
+
+|img_example|
+
+
+.. |img_example| image:: https://github.com/borjarg95/pushdown-generator/blob/master/.github/v1.0.16.jpg

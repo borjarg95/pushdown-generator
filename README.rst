@@ -110,7 +110,7 @@ Java tested versions
 MAVEN
 ~~~~~
 
-*To use maven, need to install first with* ( read more here at: `maven in five minutes`_) : ``pip install tox``
+*To use maven, need to install first with* ( read more here at: `maven in five minutes`_)
 
 
 .. _Usage Guide: USAGE.rst

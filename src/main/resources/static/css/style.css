@@ -1,19 +1,8 @@
 body {
-    background: url("../img/fondo.jpg");
-    background-size:85% 100%;
-    background-repeat: repeat !important;
-	margin-left: 1cm !important;
-	margin-top: 1cm !important;
+    background-color: #f5f5f5;
 }
 pre, h3, h2{
   text-align: center;
-}
-span{
-	font-size: 14px !important;
-}
-
-#transiciones{
-	margin-left: 15% !important;
 }
 
 i.informacionAuxiliar{
@@ -34,3 +23,55 @@ b.palabraAceptada{
 b.palabraRechazada{
 	color:red !important;
 }
+
+
+/*
+@netzulo template
+*/
+span:after {
+	content: attr('data-separator')
+}
+
+#main-header {
+
+}
+#main-content {
+
+}
+
+#main-content #pg-generator {
+
+}
+
+#main-content #pg-definition {
+
+}
+
+#main-content #pg-examples {
+
+}
+
+#main-footer {
+	position: fixed;
+    left: 0;
+    bottom: 0;
+	width: 100%;
+	background-color: black;
+	color: white;
+}
+
+
+/* 
+Examples GUI settings
+*/
+
+#automata-not-determinictic-code {
+	text-align: left;
+}
+
+/*
+modal-notification
+*/
+#modal-notification {}
+#modal-notification-title {}
+#modal-notification-title-long {}
