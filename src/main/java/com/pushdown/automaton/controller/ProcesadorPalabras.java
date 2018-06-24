@@ -10,8 +10,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import com.pushdown.automaton.exceptions.AlfabetoNoValidoException;
+import com.pushdown.automaton.exceptions.DatosNoValidosException;
 import com.pushdown.automaton.exceptions.NodosInfinitosException;
+import com.pushdown.automaton.exceptions.ValidacionPalabraException;
 import com.pushdown.automaton.model.AutomataPila;
 import com.pushdown.automaton.model.TransicionIn;
 import com.pushdown.automaton.model.TransicionOut;
@@ -27,9 +28,10 @@ public class ProcesadorPalabras {
 	 * @param palabraEntrada no puede ser null, se valida desde el front.
 	 * @param automata
 	 * @return
+	 * @throws ValidacionPalabraException 
 	 * @throws Exception
 	 */
-	public boolean compruebaPalabraBT(String palabraEntrada, AutomataPila automata) throws AlfabetoNoValidoException{
+	public boolean compruebaPalabraBT(String palabraEntrada, AutomataPila automata) throws ValidacionPalabraException{
 		palabraEntrada = palabraEntrada.trim(); //suprimimos los espacios en blanco en caso de que los haya
 		validaCaracteresPalabra(palabraEntrada, automata);
 		
@@ -61,15 +63,13 @@ public class ProcesadorPalabras {
 	 * 
 	 * @param palabraEntrada
 	 * @param automata
-	 * @throws AlfabetoNoValidoException
+	 * @throws DatosNoValidosException
+	 * @throws ValidacionPalabraException 
 	 */
-	private void validaCaracteresPalabra(String palabraEntrada, AutomataPila automata)
-			throws AlfabetoNoValidoException {
+	private void validaCaracteresPalabra(String palabraEntrada, AutomataPila automata) throws ValidacionPalabraException {
 		boolean pertenece = true; 
 		int i = 0;
 		char letraRechazada =' ';
-		
-		//1
 		while (i<palabraEntrada.length() && pertenece){
 			pertenece = automata.getAlfabetoLenguaje().contains(palabraEntrada.charAt(i));
 			if (!pertenece){
@@ -80,7 +80,7 @@ public class ProcesadorPalabras {
 		}
 		
 		if (i!=palabraEntrada.length() || (i==palabraEntrada.length() && !pertenece)){
-			throw new AlfabetoNoValidoException("El caracter: "+letraRechazada+ " no pertenece al alfabeto");
+			throw new ValidacionPalabraException("El caracter: "+letraRechazada+ " no pertenece al alfabeto");
 		}
 	}
 	

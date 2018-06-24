@@ -8,8 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.pushdown.automaton.controller.GeneradorAutomataPila;
-import com.pushdown.automaton.exceptions.AlfabetoNoValidoException;
-import com.pushdown.automaton.exceptions.DatosEntradaErroneosException;
+import com.pushdown.automaton.exceptions.DatosNoValidosException;
 
 public class AutomataPila {
 
@@ -61,10 +60,10 @@ public class AutomataPila {
 	 * @param definicion
 	 * @return
 	 * @throws IOException
-	 * @throws AlfabetoNoValidoException 
+	 * @throws DatosNoValidosException 
 	 * @throws DatosEntradaErroneosException 
 	 */
-	public AutomataPila(String definicion, GeneradorAutomataPila generador) throws IOException, AlfabetoNoValidoException, DatosEntradaErroneosException{
+	public AutomataPila(String definicion, GeneradorAutomataPila generador) throws DatosNoValidosException {
 		AutomataPila automata = generador.generaAutomata(definicion);
 		this.alfabetoLenguaje = automata.getAlfabetoLenguaje();
 		this.alfabetoPila =  automata.getAlfabetoPila();

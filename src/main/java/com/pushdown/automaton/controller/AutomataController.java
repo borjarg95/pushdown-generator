@@ -19,7 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pushdown.automaton.exceptions.AlfabetoNoValidoException;
+import com.pushdown.automaton.exceptions.DatosNoValidosException;
+import com.pushdown.automaton.exceptions.ValidacionPalabraException;
 import com.pushdown.automaton.model.AutomataPila;
 import com.pushdown.automaton.utils.Utils;
 
@@ -42,7 +43,7 @@ public class AutomataController {
 	@Qualifier("generadorAutomataPila")
 	private GeneradorAutomataPila generadorAutomataPila;
  
-	@RequestMapping(value = "/Generate", method = RequestMethod.POST)
+	@RequestMapping(value = "/generate", method = RequestMethod.POST)
 	public ResponseEntity<?> generaAutomata(@RequestBody String entrada, HttpServletRequest request) {
 		String entradaConsulta = Utils.correctorCharEspeciales(entrada);
 		try {
@@ -52,14 +53,14 @@ public class AutomataController {
 			automata.setIdAutomata(automatasGenerados.size() + 1);
 			automatasGenerados.put(automata.getIdAutomata(), automata);
 			logger.info("La IP: "+request.getRemoteAddr()+ " genera el automata: "+automata.getIdAutomata() +" "+automata);
-			return new ResponseEntity<>(automata, HttpStatus.OK);
+			return new ResponseEntity<>(automata, HttpStatus.CREATED);
 		} catch (Exception e) {
 			logger.error("La IP: "+request.getRemoteAddr()+ " NO genera automata: " + entradaConsulta.replace('\n', ' ') + " " + e.getMessage());
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
 		}
 	}
 
-	@RequestMapping(value = "/CheckWord/{index}/{palabra}", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/checkword/{index}/{palabra}", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<?> validaPalabra(@PathVariable("index") String index, @PathVariable("palabra") String palabra) {
 		
 		if (automatasGenerados.get(Integer.valueOf(index)) != null) {
@@ -68,8 +69,10 @@ public class AutomataController {
 						procesadorPalabras.compruebaPalabraBT(Utils.correctorCharEspeciales(palabra),
 						automatasGenerados.get(Integer.valueOf(index))),
 						HttpStatus.OK);
-			} catch (AlfabetoNoValidoException e) {
+			} catch (ValidacionPalabraException e) {
 				return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
+			} catch (NumberFormatException e) {
+				return new ResponseEntity<>("El parametro index: "+index+" debe ser el identificador del automata", HttpStatus.BAD_REQUEST);
 			}
 		} else {
 			return new ResponseEntity<>("El automata no se ha cargado correctamente, por favor vuelve a generarlo.",

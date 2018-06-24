@@ -13,7 +13,7 @@ function generarDefinicionLarga() {
 		ModalNotif("¡Debes escribir una descripción!")
 		return 0;
 	}
-	var busqueda = "/Generate"
+	var busqueda = "/generate"
 		$.ajax({
 		    url : busqueda,
 		    type: "POST",
@@ -71,7 +71,7 @@ function compruebaPalabra(){
 		palabra = "+";
 	}
 	var idAutomata = $("#identificador").val();
-	var ruta = "/CheckWord/" + idAutomata + "/" + palabra;
+	var ruta = "/checkword/" + idAutomata + "/" + palabra;
 		$.ajax({
 		    url: ruta,
 		    type: 'GET',

@@ -4,9 +4,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +12,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.pushdown.automaton.controller.GeneradorAutomataPila;
 import com.pushdown.automaton.controller.ProcesadorPalabras;
-import com.pushdown.automaton.exceptions.AlfabetoNoValidoException;
-import com.pushdown.automaton.exceptions.DatosEntradaErroneosException;
 import com.pushdown.automaton.model.AutomataPila;
 
 @RunWith(SpringRunner.class)
