@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" ng-app="pgApp">
 
 <head>
     <meta charset="UTF-8">
@@ -19,11 +19,14 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
         crossorigin="anonymous"></script>
+    <!-- AngularJS 1.6.5-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.js"></script>
     <!-- JSP scripts-->
+    <script src="js/pg-lib.js"></script>
     <script src="js/App.js"></script>
 </head>
 
-<body class="container-fluid">
+<body class="container-fluid" ng-controller="AutomatonController">
     <header id="main-header" class="row">
         <nav class="navbar navbar-light bg-light">
             <a class="navbar-brand" href="https://github.com/borjarg95/pushdown-generator" target="_blank">
@@ -65,9 +68,9 @@
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"></div>
                 <pre class="descripciones">
-                                <span data-separator=":">Transiciones</span>
-                                <div id="transiciones"></div>
-                            </pre>
+                    <span data-separator=":">Transiciones</span>
+                    <div id="transiciones"></div>
+                </pre>
             </div>
             <div id="idAutomata" class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="visibility: hidden">
                 <input class="form-control col-lg-3 col-md-3 col-sm-3 col-xs-3" type='value' id='identificador' value="" />
@@ -98,9 +101,9 @@
                 <li class="active">
                     <a data-toggle="tab" href="#automaton-not-deterministic">Aut&oacute;mata no determinista con transiciones &lambda;</a>
                 </li>
-                <li class="inactive">
-                	<a data-toggle="tab" href="#automaton-deterministic">Aut&oacute;mata determinista simple</a>            	
                 <li>
+                	<a data-toggle="tab" href="#automaton-deterministic">Aut&oacute;mata determinista simple</a>            	
+                <li class="inactive">
                     <a data-toggle="tab" href="#more-examples">More examples soon</a>
                 </li>
             </ul>
@@ -131,13 +134,16 @@
                         </p>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                        <button type="button" name="" id="useSimpleExampleDeterministic" class="btn btn-info">Usar Ejemplo</button>
+                        <button type="button" name="" id="useExampleSimpleDeterministic" class="btn btn-info">Usar Ejemplo</button>
                     </div>
-                </div>                
+                </div>
                 <div id="more-examples" class="tab-pane fade">
                     <h4>Comming soon</h4>
                 </div>
             </div>
+        </section>
+        <section id="pg-generator-form" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            ...
         </section>
     </article>
     <footer id="main-footer" class="row">
