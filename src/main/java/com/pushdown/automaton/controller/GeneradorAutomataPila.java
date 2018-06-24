@@ -153,7 +153,7 @@ public class GeneradorAutomataPila {
 		}
 		if (!(vectorTransEntrada[1].isEmpty())) {
 			String simEntradaAlfabeto = vectorTransEntrada[1];
-			seteaSimboloEntradaTranIn(automata, line, tranEntrada, cabeceraExcepcion, simEntradaAlfabeto);
+			seteaSimboloEntradaTranIn(automata, line, tranEntrada, simEntradaAlfabeto);
 		} else {
 			throw new DatosNoValidosException(cabeceraExcepcion+line	+", es vacia",
 					ErrorTransiciones.TRANSICION_IN_MAL_DEFINIDA_EN_LINEA);
@@ -169,7 +169,7 @@ public class GeneradorAutomataPila {
 	}
 
 	private void seteaSimboloEntradaTranIn(AutomataPila automata, int line, TransicionIn tranEntrada,
-			String cabeceraExcepcion, String simEntradaAlfabeto) throws DatosNoValidosException {
+			String simEntradaAlfabeto) throws DatosNoValidosException {
 		if (simEntradaAlfabeto.trim().isEmpty()){									
 			//Es una transicion lambda
 			tranEntrada.setSimbEntrada(Utils.LAMBDA); //utilizamos el s�mbolo @ como lambda.
@@ -178,7 +178,7 @@ public class GeneradorAutomataPila {
 			if (automata.getAlfabetoLenguaje().contains(simEntradaAlfabeto.charAt(0))){
 				tranEntrada.setSimbEntrada(simEntradaAlfabeto.charAt(0));
 			} else {
-				throw new DatosNoValidosException(cabeceraExcepcion + line 
+				throw new DatosNoValidosException(ErrorTransiciones.TRANSICION_IN_MAL_DEFINIDA_EN_LINEA.getDescripcion() + line 
 						+"el simbolo de entrada no pertenece al alfabeto del lenguaje", ErrorTransiciones.TRANSICION_IN_MAL_DEFINIDA_EN_LINEA);
 			}
 		}
