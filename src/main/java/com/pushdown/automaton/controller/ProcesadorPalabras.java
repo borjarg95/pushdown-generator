@@ -30,24 +30,8 @@ public class ProcesadorPalabras {
 	 * @throws Exception
 	 */
 	public boolean compruebaPalabraBT(String palabraEntrada, AutomataPila automata) throws AlfabetoNoValidoException{
-		boolean pertenece = true; 
-		int i = 0;
-		char letraRechazada =' ';
 		palabraEntrada = palabraEntrada.trim(); //suprimimos los espacios en blanco en caso de que los haya
-		
-		//1� Comprobamos que los caracteres de entrada pertenecen al alfabeto
-		while (i<palabraEntrada.length() && pertenece){
-			pertenece = automata.getAlfabetoLenguaje().contains(palabraEntrada.charAt(i));
-			if (!pertenece){
-				letraRechazada = palabraEntrada.charAt(i);
-				pertenece = false;
-			}
-			i++;
-		}
-		
-		if (i!=palabraEntrada.length() || (i==palabraEntrada.length() && !pertenece)){
-			throw new AlfabetoNoValidoException("El caracter: "+letraRechazada+ " no pertenece al alfabeto");
-		}
+		validaCaracteresPalabra(palabraEntrada, automata);
 		
 		//2� Cargamos la primera transicion para llamar al metodo recursivo de BT
 		Deque<Character> pila = new ArrayDeque<>();
@@ -68,6 +52,36 @@ public class ProcesadorPalabras {
 			logger.info(LA_PALABRA+palabra+" NO esta aceptada por el automata: "+automata.getIdAutomata());
 		}
 		return resultado;
+	}
+
+	/**
+	 * Dada una cadena de entrada y un autómata construido, 
+	 * se valida que la todos los caracteres de la palabra 
+	 * pertenecen al alfabeto del automata.
+	 * 
+	 * @param palabraEntrada
+	 * @param automata
+	 * @throws AlfabetoNoValidoException
+	 */
+	private void validaCaracteresPalabra(String palabraEntrada, AutomataPila automata)
+			throws AlfabetoNoValidoException {
+		boolean pertenece = true; 
+		int i = 0;
+		char letraRechazada =' ';
+		
+		//1
+		while (i<palabraEntrada.length() && pertenece){
+			pertenece = automata.getAlfabetoLenguaje().contains(palabraEntrada.charAt(i));
+			if (!pertenece){
+				letraRechazada = palabraEntrada.charAt(i);
+				pertenece = false;
+			}
+			i++;
+		}
+		
+		if (i!=palabraEntrada.length() || (i==palabraEntrada.length() && !pertenece)){
+			throw new AlfabetoNoValidoException("El caracter: "+letraRechazada+ " no pertenece al alfabeto");
+		}
 	}
 	
 	/**

@@ -61,7 +61,7 @@
                     <pre class="descripciones">Alfabeto de la pila:   <span class="label label-default" id = "alfabetoPila"></span></pre>
                     <pre class="descripciones">Estados de la pila:    <span class="label label-default" id = "estadosPila"></span></pre>
                     <pre class="descripciones">Estado inicial pila:   <span class="label label-default" id = "estadoInicial"></span></pre>
-                    <pre class="descripciones">Simbolo inicial pila:  <span class="label label-default" id = "simbInicialPila"></span></pre>
+                    <pre class="descripciones">S&iacute;mbolo inicial pila:  <span class="label label-default" id = "simbInicialPila"></span></pre>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"></div>
                 <pre class="descripciones">
@@ -96,10 +96,10 @@
             <h3>Ejemplos de definiciones</h3>
             <ul class="nav nav-tabs">
                 <li class="active">
-                    <a data-toggle="tab" href="#automaton-not-deterministic">Autómata no determinista con transiciones &lambda;</a>
+                    <a data-toggle="tab" href="#automaton-not-deterministic">Aut&oacute;mata no determinista con transiciones &lambda;</a>
                 </li>
                 <li class="inactive">
-                	<a data-toggle="tab" href="#automaton-deterministic">Autómata determinista simple</a>            	
+                	<a data-toggle="tab" href="#automaton-deterministic">Aut&oacute;mata determinista simple</a>            	
                 <li>
                     <a data-toggle="tab" href="#more-examples">More examples soon</a>
                 </li>
@@ -154,9 +154,6 @@
         </div>
     </footer>
 
-
-
-
     <!-- Modal -->
     <div class="modal fade" id="modal-help" tabindex="-1" role="dialog" aria-labelledby="modal-help-label" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -169,13 +166,13 @@
                 </div>
                 <div class="modal-body">
                     <p>
-                        <b>La primera linea contiene separados por el simbolo
+                        <b>La primera l&iacute;nea contiene separados por el s&iacute;mbolo
                             <b style="color:green">; </b>los siguientes elementos: </b>
                         <ol>
                             <li>Alfabeto lenguaje:
                                 <b class="ejemploPlantilla">{a,b}</b>
                             </li>
-                            <li>Simbolos automata:
+                            <li>S&iacute;mbolos automata:
                                 <b class="ejemploPlantilla">{S,A,B}</b>
                             </li>
                             <li>Conjunto de estados:
@@ -184,37 +181,37 @@
                             <li>Estado inicial:
                                 <b class="ejemploPlantilla">p</b>
                             </li>
-                            <li>Simbolo inicial de pila:
+                            <li>S&iacute;mbolo inicial de pila:
                                 <b class="ejemploPlantilla">S</b>
                             </li>
                         </ol>
                         <i class="ejemplo">Ejemplo: {a,b};{S,A,B};{p,q,r};p;S;</i>
                     </p>
                     <p>
-                        <b>Una transición por linea:</b>
+                        <b>Una transici&oacute;n por l&iacute;nea:</b>
                         <ol>
                             <li>
-                                Transicion de entrada:
+                                Transici&oacute;n de entrada:
                                 <b style="color:blue">f( , , )</b>
                                 <ul>
                                     <li>Estado origen:
                                         <b class="ejemploPlantilla">p</b>
                                     </li>
                                     <li>
-                                        Simbolo entrada:
+                                        S&iacute;mbolo entrada:
                                         <b class="ejemploPlantilla">b</b>
                                         <i class="informacionAuxiliar">espacio en blanco = &lambda;</i>
                                     </li>
-                                    <li>Simbolo cabeza pila:
+                                    <li>S&iacute;mbolo cabeza pila:
                                         <b class="ejemploPlantilla">S</b>
                                     </li>
                                 </ul>
                             </li>
-                            <li>Unión
+                            <li>Uni&iacute;n
                                 <b class="ejemploPlantilla">=</b>
                             </li>
                             <li>
-                                Transición de salida:
+                                Transici&oacute;n de salida:
                                 <b class="ejemploPlantilla">{p,q,r}</b>
                                 <ul>
                                     <li>Estado destino:
@@ -227,9 +224,9 @@
                             </li>
 
                         </ol>
-                        <i class="ejemplo">Ejemplo de transición: f(p,b,S)=(p,BS)</i>
+                        <i class="ejemplo">Ejemplo de transici&oacute;n: f(p,b,S)=(p,BS)</i>
                         <br>
-                        <i class="ejemplo">Ejemplo de transición con &lambda;: f(p,b,S)=(p,BS)</i>
+                        <i class="ejemplo">Ejemplo de transici&oacute;n con &lambda;: f(p,b,S)=(p,BS)</i>
                     </p>
                 </div>
                 <div class="modal-footer">

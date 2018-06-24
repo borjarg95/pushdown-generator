@@ -51,10 +51,10 @@ public class AutomataController {
 			AutomataPila automata = new AutomataPila(entradaConsulta, generadorAutomataPila);
 			automata.setIdAutomata(automatasGenerados.size() + 1);
 			automatasGenerados.put(automata.getIdAutomata(), automata);
-			logger.info("La IP: "+request.getLocalName()+ " genera el automata: "+automata.getIdAutomata() +" "+automata);
+			logger.info("La IP: "+request.getRemoteAddr()+ " genera el automata: "+automata.getIdAutomata() +" "+automata);
 			return new ResponseEntity<>(automata, HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("La IP: "+request.getLocalAddr()+ " NO genera automata: " + entradaConsulta.replace('\n', ' ') + " " + e.getMessage());
+			logger.error("La IP: "+request.getRemoteAddr()+ " NO genera automata: " + entradaConsulta.replace('\n', ' ') + " " + e.getMessage());
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
 		}
 	}

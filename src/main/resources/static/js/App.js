@@ -2,7 +2,7 @@
  * GLOBAL VARs
  */
 const EXAMPLE_NOT_DETERMINISTIC = "{a,b};{S,A,B};{p,q,r};p;S;\nf(p,b,S)=(p,BS)\nf(p,b,B)=(p,BB)\nf(p, ,S)=(p, )\nf(p,b,B)=(r, )\nf(p,a,B)=(q, )\nf(q,a,B)=(q, )\nf(q, ,S)=(q, )\nf(q,b,B)=(r, )\nf(r,b,B)=(r, )\nf(r, ,S)=(r, )";
-const EXAMPLE_SIMPLE_DETERMINISTIC = "{a,b};{S,N};{q0,q1};q0;S;\nf(q0,a,S)=(q0,NS)\nf(q0,a,N)=(q0,NN)\nf(q0,b,N)=(q1, )\nf(q1,b,N)=(q1, )\nf(q1,b,S)=(q1, )"
+const EXAMPLE_SIMPLE_DETERMINISTIC = "{a,b};{S,N};{q0,q1};q0;S;\nf(q0,a,S)=(q0,N)\nf(q0,a,N)=(q0,NN)\nf(q0,b,N)=(q1, )\nf(q1,b,N)=(q1, )";
 /**
  * Metodo que procesa la entrada y genera un nuevo automata
  * 

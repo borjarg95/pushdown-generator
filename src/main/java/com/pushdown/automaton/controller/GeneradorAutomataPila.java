@@ -74,17 +74,34 @@ public class GeneradorAutomataPila {
 			throws DatosEntradaErroneosException, AlfabetoNoValidoException {
 		line++;
 		validaFormatoLineaTransicion(linea, line);
-
 		linea = linea.substring(2, linea.length()-1);				 
 		String[] transiciones = divideLineaTransicion(linea, line);
-		
 		//Procesado de transicion
 		String[] vectorTransEntrada = recuperaVectorTransicionEntrada(line, transiciones);
-		TransicionIn tranIn = generaTransicionEntrada(vectorTransEntrada, automata, line);//contiene ")" al final
-		
+		TransicionIn tranIn = generaTransicionEntrada(vectorTransEntrada, automata, line);
 		String[] vectorTransSalida = recuperaVectorTransicionSalida(line, transiciones);
-		TransicionOut tranOut = generaTransicionSalida(vectorTransSalida,automata,line);  //contiene "(" al iniciozz
+		TransicionOut tranOut = generaTransicionSalida(vectorTransSalida,automata,line);
 		
+		incluyeTransicionSalidaEnAutomata(automata, line, tranIn, tranOut);
+		if (tranOut.getNuevaCabezaPila().size()==1 && (tranOut.getNuevaCabezaPila().get(0) == Utils.LAMBDA)){
+			if (automata.getTransicionesVaciado() == null)					
+				automata.setTransicionesVaciado(new ArrayList<TransicionIn>());						
+			automata.getTransicionesVaciado().add(tranIn);
+		}
+		return line;
+	}
+
+	/**
+	 * Dada una transicion de entrada, de salida y un automata, 
+	 * se intenta la transicioens en el mapa de transiciones del automata
+	 * @param automata
+	 * @param line
+	 * @param tranIn
+	 * @param tranOut
+	 * @throws DatosEntradaErroneosException
+	 */
+	private void incluyeTransicionSalidaEnAutomata(AutomataPila automata, int line, TransicionIn tranIn,
+			TransicionOut tranOut) throws DatosEntradaErroneosException {
 		List<TransicionOut> listaSalida = automata.getFuncionesTransicion().get(tranIn);
 		if (listaSalida == null){
 			listaSalida = new ArrayList<>();
@@ -97,13 +114,6 @@ public class GeneradorAutomataPila {
 			}
 		}
 		automata.getFuncionesTransicion().put(tranIn, listaSalida);
-		
-		if (tranOut.getNuevaCabezaPila().size()==1 && (tranOut.getNuevaCabezaPila().get(0) == Utils.LAMBDA)){
-			if (automata.getTransicionesVaciado() == null)					
-				automata.setTransicionesVaciado(new ArrayList<TransicionIn>());						
-			automata.getTransicionesVaciado().add(tranIn);
-		}
-		return line;
 	}
 
 	public AutomataPila generaAutomata(String definicion) throws AlfabetoNoValidoException, DatosEntradaErroneosException{
